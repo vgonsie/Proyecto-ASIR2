@@ -1,18 +1,10 @@
 Nombre del Proyecto: Simulación Automática de Ataques y Respuesta con Python
 Autor: Vicente González Sierra
-Tutor: Blanca Vargas Machuca
+Tutor: Francisco Ávila
 
 Centro Educativo: I.E.S Francisco Romero Vargas (Jerez de la Frontera)
 Ciclo Formativo: Administración de Sistemas Informáticos en Red (ASIR)
 Curso: 2024/2025
-
-Tabla de contenido
-1. Introducción
-2. Finalidad
-3. Objetivos
-4. Medios Necesarios
-5. Planificación
-
 
 1. Introducción
 Este proyecto tiene como objetivo desarrollar un sistema automatizado que simule ataques
