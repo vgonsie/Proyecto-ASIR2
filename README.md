@@ -13,6 +13,7 @@ Tabla de contenido
 4. Medios Necesarios
 5. Planificación
 
+
 1. Introducción
 Este proyecto tiene como objetivo desarrollar un sistema automatizado que simule ataques
 informáticos y analice las respuestas de los mecanismos de defensa, como firewalls,
