@@ -80,16 +80,16 @@ Este script se utiliza para crear la máquina virtual **ataque1** en KVM utiliza
 --os-type linux --os-variant ubuntu22.04 \
 --network bridge=virbr0 \
 --cdrom /var/lib/libvirt/boot/ubuntu.iso \
---graphics none --console pty,target_type=serial´´´
+--graphics none --console pty,target_type=serial```
 
 **Uso**:
 1. Descargar la versión Ubuntu 24.04.
   ```bash
-  wget https://releases.ubuntu.com/22.04/ubuntu-22.04.4-live-server-amd64.iso -O ubuntu-22.04.iso
+  wget https://releases.ubuntu.com/22.04/ubuntu-22.04.4-live-server-amd64.iso -O ubuntu-22.04.iso```
 
 2. Ejecuta el siguiente comando en la terminal:
    ```bash
-   ./lab/crear_vm.sh
+   ./lab/crear_vm.sh```
 
 ---
 
