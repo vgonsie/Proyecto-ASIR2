@@ -80,7 +80,7 @@ Este script se utiliza para crear la máquina virtual **ataque1** en KVM utiliza
 --os-type linux --os-variant ubuntu22.04 \
 --network bridge=virbr0 \
 --cdrom /var/lib/libvirt/boot/ubuntu.iso \
---graphics none --console pty,target_type=serial
+--graphics none --console pty,target_type=serial´´´
 
 **Uso**:
 1. Descargar la versión Ubuntu 24.04.
