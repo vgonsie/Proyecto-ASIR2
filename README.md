@@ -96,7 +96,7 @@ Este script se utiliza para crear la máquina virtual **ataque1** en KVM utiliza
   ```
 3. Ejecuta el siguiente comando en la terminal:
    ```bash
-   ./lab/crear_vm.sh
+   ./lab/CreaAtaque1.sh
    ```
 
 ---
@@ -118,7 +118,6 @@ Para poder ejecutar el script, primero debes dar permisos de ejecución con el s
   ```
 
 Ejecuta el siguiente comando:
-
-```bash
-./lab/eliminar_vm.sh
-```
+  ```bash
+  ./lab/BorraAtaque1.sh
+  ```
