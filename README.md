@@ -67,3 +67,38 @@ Los objetivos principales de este proyecto son:
 | **Total estimado:** | **51 horas** |
 
 ---
+
+## Scripts
+
+### 1. `CreaAtaque1.sh`
+
+Este script se utiliza para crear la máquina virtual **ataque1** en KVM utilizando la herramienta `virt-install`. Configura la VM con 2 GB de RAM, 2 vCPUs y un disco de 10 GB, e instala una imagen de Ubuntu 22.04.
+  ```bash
+  virt-install --name ataque1 \
+--ram 2048 --vcpus 2 \
+--disk path=/var/lib/libvirt/images/ataque1.qcow2,size=10 \
+--os-type linux --os-variant ubuntu22.04 \
+--network bridge=virbr0 \
+--cdrom /var/lib/libvirt/boot/ubuntu.iso \
+--graphics none --console pty,target_type=serial
+
+**Uso**:
+1. Descargar la versión Ubuntu 24.04.
+  ```bash
+  wget https://releases.ubuntu.com/22.04/ubuntu-22.04.4-live-server-amd64.iso -O ubuntu-22.04.iso
+
+2. Ejecuta el siguiente comando en la terminal:
+   ```bash
+   ./lab/crear_vm.sh
+
+---
+
+### 2. `BorraAtaque1.sh`
+
+Este script elimina la máquina virtual **ataque1** y borra su disco asociado. Utiliza `virsh` para detener y eliminar la máquina, asegurando que no queden restos de la VM en el sistema.
+
+#### **Uso**
+Para eliminar la máquina virtual **ataque1**, ejecuta el siguiente comando:
+
+```bash
+./lab/eliminar_vm.sh
