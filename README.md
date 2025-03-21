@@ -68,7 +68,7 @@ Los objetivos principales de este proyecto son:
 
 ---
 
-## Creación de primeros scripts
+## Creación de primeros scripts (outdated)
 
 ### 1. `CreaAtaque1.sh`
 
@@ -121,3 +121,16 @@ Ejecuta el siguiente comando:
   ```bash
   ./lab/BorraAtaque1.sh
   ```
+
+---
+
+### Búsqueda sobre máquinas vulnerables y automatización
+
+### Metasploitable
+
+Metasploitable 2 es una máquina vulnerable con fallos en SSH, FTP, MySQL y Samba, credenciales débiles, inyección SQL y ejecución remota de código. Es ideal para pruebas de penetración y análisis de seguridad.
+
+Descargar [Metasploitable](https://sourceforge.net/projects/metasploitable/)
+
+
+---
