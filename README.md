@@ -132,5 +132,57 @@ Metasploitable 2 es una máquina vulnerable con fallos en SSH, FTP, MySQL y Samb
 
 Descargar [Metasploitable](https://sourceforge.net/projects/metasploitable/)
 
+### Conversión a qcow2 y automatización de la instalación de máquinas vulnerables (SIN TERMINAR)
 
----
+  ```bash
+  #!/bin/bash
+
+VM_NAME="Metasploitable2"
+VMDK_PATH="/ruta/al/archivo/Metasploitable.vmdk"
+QCOW2_PATH="/var/lib/libvirt/images/Metasploitable2.qcow2"
+ISO_PATH="/usr/share/virtio-win/virtio-win.iso"
+
+function instalar_vm() {
+    echo "Convirtiendo VMDK a QCOW2..."
+    qemu-img convert -f vmdk -O qcow2 "$VMDK_PATH" "$QCOW2_PATH"
+    
+    echo "Creando máquina virtual en KVM..."
+    virt-install \
+        --name "$VM_NAME" \
+        --ram 1024 --vcpus 1 \
+        --disk path="$QCOW2_PATH",format=qcow2 \
+        --os-type linux --os-variant generic \
+        --network network=default,model=virtio \
+        --graphics none \
+        --console pty,target_type=serial \
+        --import
+    
+    echo "Instalación completada. Usa 'virsh list --all' para verificar."
+}
+
+function eliminar_vm() {
+    echo "Eliminando la máquina virtual..."
+    virsh destroy "$VM_NAME"
+    virsh undefine "$VM_NAME"
+    rm -f "$QCOW2_PATH"
+    echo "Máquina eliminada correctamente."
+}
+
+case "$1" in
+    instalar)
+        instalar_vm
+        ;;
+    eliminar)
+        eliminar_vm
+        ;;
+    *)
+        echo "Uso: $0 {instalar|eliminar}"
+        exit 1
+        ;;
+esac
+  ```
+
+### Permisos 
+
+  ```bash
+  chmod +x ./Defensa1.sh
