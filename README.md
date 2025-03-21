@@ -132,7 +132,7 @@ Metasploitable 2 es una máquina vulnerable con fallos en SSH, FTP, MySQL y Samb
 
 ### Login
 
-Usuario: "msfadmin"
+Usuario: "msfadmin" <br>
 Contraseña: "msfadmin"
 
 Descargar [Metasploitable](https://sourceforge.net/projects/metasploitable/)
