@@ -130,6 +130,11 @@ Ejecuta el siguiente comando:
 
 Metasploitable 2 es una máquina vulnerable con fallos en SSH, FTP, MySQL y Samba, credenciales débiles, inyección SQL y ejecución remota de código. Es ideal para pruebas de penetración y análisis de seguridad.
 
+### Login
+
+Usuario: "msfadmin"
+Contraseña: "msfadmin"
+
 Descargar [Metasploitable](https://sourceforge.net/projects/metasploitable/)
 
 ### Conversión a qcow2 y automatización de la instalación de máquinas vulnerables (SIN TERMINAR)
