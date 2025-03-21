@@ -315,3 +315,38 @@ while true; do
   esac
 done
   ```bash
+
+---
+
+### Script para escanear red en busca de puertos abiertos con Nmap
+
+Este script servirá para escanear una red en busca de puertos abiertos para explotar una vulnerabilidad en una máquina.
+
+  ```bash
+#!/bin/bash
+
+if [ -z "$1" ]; then
+  echo "Uso: $0 <dirección_ip_o_host>"
+  exit 1
+fi
+
+TARGET=$1
+
+echo "Escaneando puertos abiertos de: $TARGET"
+
+nmap -p- --open $TARGET
+  ```bash
+
+### Dar permisos al script
+
+  ```bash
+chmod +x scan_ports.sh
+  ```bash
+
+### Ejecutar el script
+
+  ```bash
+./scan_ports.sh 192.168.1.1
+  ```bash
+
+
