@@ -191,3 +191,127 @@ esac
 
   ```bash
   chmod +x ./Defensa1.sh
+  ```
+
+### Actualización de script para conversión a qcow2 y automatización de creación y borrado de máquinas vulnerables.
+
+He actualizado el script para que solicite por pantalla al usuario los datos para la creación y borrado de la VM con las diferentes opciones.
+
+  ```bash
+#!/bin/bash
+
+function mostrar_menu() {
+  echo "Selecciona una opción:"
+  echo "1) Instalar máquina virtual"
+  echo "2) Eliminar máquina virtual"
+  echo "3) Salir"
+}
+
+function solicitar_valores() {
+  echo "Configuración de la máquina virtual:"
+  
+  # Opciones predefinidas para el nombre de la VM
+  declare -A nombres_vm=(
+    [1]="Metasploitable2"
+    [2]="KaliLinux"
+    [3]="UbuntuServer"
+  )
+  echo "Elige un nombre para la máquina virtual:"
+  for key in "${!nombres_vm[@]}"; do
+    echo "$key) ${nombres_vm[$key]}"
+  done
+  read -p "Opción (1-${#nombres_vm[@]}): " opcion_nombre
+  VM_NAME=${nombres_vm[$opcion_nombre]}
+
+  # Opciones predefinidas para la ruta del VMDK
+  declare -A rutas_vmdk=(
+    [1]="/ruta/al/archivo/Metasploitable.vmdk"
+    [2]="/ruta/al/archivo/KaliLinux.vmdk"
+    [3]="/ruta/al/archivo/UbuntuServer.vmdk"
+  )
+  echo "Elige la ruta del archivo VMDK:"
+  for key in "${!rutas_vmdk[@]}"; do
+    echo "$key) ${rutas_vmdk[$key]}"
+  done
+  read -p "Opción (1-${#rutas_vmdk[@]}): " opcion_vmdk
+  VMDK_PATH=${rutas_vmdk[$opcion_vmdk]}
+
+  # Ruta predefinida para el archivo QCOW2
+  QCOW2_PATH="/var/lib/libvirt/images/${VM_NAME}.qcow2"
+
+  # Opciones predefinidas para la RAM
+  declare -A opciones_ram=(
+    [1]=1024
+    [2]=2048
+    [3]=4096
+  )
+  echo "Elige la cantidad de RAM (en MB):"
+  for key in "${!opciones_ram[@]}"; do
+    echo "$key) ${opciones_ram[$key]} MB"
+  done
+  read -p "Opción (1-${#opciones_ram[@]}): " opcion_ram
+  RAM=${opciones_ram[$opcion_ram]}
+
+  # Opciones predefinidas para el número de vCPUs
+  declare -A opciones_vcpus=(
+    [1]=1
+    [2]=2
+    [3]=4
+  )
+  echo "Elige el número de vCPUs:"
+  for key in "${!opciones_vcpus[@]}"; do
+    echo "$key) ${opciones_vcpus[$key]} vCPU(s)"
+  done
+  read -p "Opción (1-${#opciones_vcpus[@]}): " opcion_vcpus
+  VCPUS=${opciones_vcpus[$opcion_vcpus]}
+}
+
+function instalar_vm() {
+  echo "Convirtiendo VMDK a QCOW2..."
+  qemu-img convert -f vmdk -O qcow2 "$VMDK_PATH" "$QCOW2_PATH"
+  
+  echo "Creando máquina virtual en KVM..."
+  virt-install \
+      --name "$VM_NAME" \
+      --ram "$RAM" --vcpus "$VCPUS" \
+      --disk path="$QCOW2_PATH",format=qcow2 \
+      --os-type linux --os-variant generic \
+      --network network=default,model=virtio \
+      --graphics none \
+      --console pty,target_type=serial \
+      --import
+  
+  echo "Instalación completada. Usa 'virsh list --all' para verificar."
+}
+
+function eliminar_vm() {
+  echo "Eliminando la máquina virtual..."
+  virsh destroy "$VM_NAME"
+  virsh undefine "$VM_NAME"
+  rm -f "$QCOW2_PATH"
+  echo "Máquina eliminada correctamente."
+}
+
+while true; do
+  mostrar_menu
+  read -p "Opción (1-3): " opcion_principal
+
+  case "$opcion_principal" in
+    1)
+      solicitar_valores
+      instalar_vm
+      ;;
+    2)
+      solicitar_valores
+      eliminar_vm
+      ;;
+    3)
+      echo "Saliendo..."
+      exit 0
+      ;;
+    *)
+      echo "Opción no válida. Inténtalo de nuevo."
+      ;;
+  esac
+done
+  ```bash
