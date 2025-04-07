@@ -355,9 +355,7 @@ chmod +x scan_ports.sh
 
 ---
 
-### 🛠️ CREACIÓN DE MÁQUINAS VIRTUALES
-
----
+## 🛠️ CREACIÓN DE MÁQUINAS VIRTUALES
 
 ### `crea-maquina.sh`
 
