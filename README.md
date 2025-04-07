@@ -353,6 +353,8 @@ chmod +x scan_ports.sh
 
 ### ACTUALIZACIÓN DE TODOS LOS SCRIPTS
 
+---
+
 ### `crea-maquina.sh`
 
 ```bash
