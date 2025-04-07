@@ -349,4 +349,6 @@ chmod +x scan_ports.sh
 ./scan_ports.sh 192.168.1.1
   ```bash
 
+---
 
+### ACTUALIZACIÓN DE TODOS LOS SCRIPTS
