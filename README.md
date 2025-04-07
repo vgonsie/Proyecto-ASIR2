@@ -618,6 +618,141 @@ Muestra un mensaje final con:
 
 ---
 
+## 🗑️ ELIMINACIÓN DE MÁQUINAS VIRTUALES
+
+### `borra-maquina.sh`
+
+```bash
+#!/bin/bash
+
+# Definir rutas
+ATAQUE_DIR="$HOME/Proyecto-ASIR2/machines/ataque"
+DEFENSA_DIR="$HOME/Proyecto-ASIR2/machines/defensa"
+
+# Preguntar al usuario qué tipo de máquina desea eliminar
+echo "¿Qué tipo de máquina quieres eliminar?"
+echo "1) Ataque"
+echo "2) Defensa"
+read -p "Selecciona una opción (1/2): " tipo
+
+if [[ "$tipo" == "1" ]]; then
+    DIR=$ATAQUE_DIR
+elif [[ "$tipo" == "2" ]]; then
+    DIR=$DEFENSA_DIR
+else
+    echo "Opción no válida. Saliendo..."
+    exit 1
+fi
+
+# Listar carpetas de máquinas disponibles
+echo "Máquinas disponibles en $DIR:"
+machines=($(ls -d "$DIR"/*/ | xargs -n 1 basename))
+
+if [ ${#machines[@]} -eq 0 ]; then
+    echo "No hay máquinas disponibles en esta categoría."
+    exit 1
+fi
+
+for i in "${!machines[@]}"; do
+    echo "$((i+1))) ${machines[$i]}"
+done
+
+# Pedir al usuario que elija una máquina
+read -p "Selecciona el número de la máquina que deseas eliminar: " choice
+
+# Validar entrada
+if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -le 0 ] || [ "$choice" -gt "${#machines[@]}" ]]; then
+    echo "Selección no válida. Saliendo..."
+    exit 1
+fi
+
+MACHINE_FOLDER="${machines[$((choice-1))]}"
+MACHINE_PATH="$DIR/$MACHINE_FOLDER"
+
+# Buscar el archivo de la máquina dentro de la carpeta seleccionada
+QCOW2_FILE=$(find "$MACHINE_PATH" -type f -name "*.qcow2")
+
+if [[ -z "$QCOW2_FILE" ]]; then
+    echo "No se encontró un archivo .qcow2 en $MACHINE_PATH. Saliendo..."
+    exit 1
+fi
+
+MACHINE_NAME=$(basename "$QCOW2_FILE" .qcow2)
+
+# Confirmación
+read -p "¿Seguro que quieres eliminar la máquina $MACHINE_NAME y su carpeta? (s/n): " confirm
+if [[ "$confirm" != "s" ]]; then
+    echo "Operación cancelada."
+    exit 1
+fi
+
+# Detener y eliminar la máquina en `virsh`
+echo "Eliminando máquina de virt-manager..."
+virsh destroy "$MACHINE_NAME" 2>/dev/null
+virsh undefine "$MACHINE_NAME" --remove-all-storage --nvram 2>/dev/null
+
+# Verificar si fue eliminada correctamente de virt-manager
+if virsh list --all | grep -q "$MACHINE_NAME"; then
+    echo "Error: La máquina sigue apareciendo en virt-manager. Revisa manualmente."
+    exit 1
+fi
+
+# Eliminar toda la carpeta de la máquina
+rm -rf "$MACHINE_PATH"
+
+echo "Máquina $MACHINE_NAME eliminada completamente de virt-manager y su carpeta ha sido borrada."
+```
+
+Este script permite **eliminar completamente una máquina virtual**, tanto desde el sistema de archivos como desde `virt-manager` utilizando `virsh`.
+
+---
+
+### 1. Selección del tipo de máquina
+- Pregunta si se quiere eliminar una máquina de:
+  - `Ataque` (`~/Proyecto-ASIR2/machines/ataque`)
+  - `Defensa` (`~/Proyecto-ASIR2/machines/defensa`)
+- Asigna la ruta correspondiente en base a la elección.
+
+---
+
+### 2. Listado de máquinas disponibles
+- Muestra todas las carpetas dentro del directorio seleccionado.
+- Cada carpeta se asume como una máquina virtual independiente.
+- Si no hay máquinas, finaliza el script con un aviso.
+
+---
+
+### 3. Selección de la máquina a eliminar
+- El usuario elige el número de la máquina listada.
+- El script valida que la entrada sea un número válido.
+- Busca el archivo `.qcow2` dentro de la carpeta correspondiente.
+  - Si no encuentra un archivo `.qcow2`, cancela la operación.
+
+---
+
+### 4. Confirmación y nombre de la máquina
+- Extrae el nombre de la máquina desde el archivo `.qcow2`.
+- Solicita confirmación al usuario para proceder con la eliminación.
+
+---
+
+### 5. Eliminación desde `virt-manager`
+- Usa `virsh destroy` para detener la máquina si está en ejecución.
+- Luego la elimina con `virsh undefine` incluyendo `--remove-all-storage` y `--nvram`.
+- Verifica que la máquina haya desaparecido de la lista de `virsh`.
+
+---
+
+### 6. Eliminación del directorio
+- Si la máquina fue eliminada correctamente de `virt-manager`, borra la carpeta correspondiente de forma recursiva (`rm -rf`).
+
+---
+
+### Resultado final
+- La máquina queda completamente eliminada del sistema y de `virt-manager`.
+
+---
+
 ## 🔄 CONVERSIÓN DE IMÁGENES A QCOW2
 
 ### `convertir-vmdk-qcow2-actualizado.sh`
@@ -867,140 +1002,5 @@ El script sigue esta secuencia:
 5. `confirm_conversion`
 6. `convert_to_qcow2`
 7. `ask_destination_path`
-
----
-
-## 🗑️ ELIMINACIÓN DE MÁQUINAS VIRTUALES
-
-### `borra-maquina.sh`
-
-```bash
-#!/bin/bash
-
-# Definir rutas
-ATAQUE_DIR="$HOME/Proyecto-ASIR2/machines/ataque"
-DEFENSA_DIR="$HOME/Proyecto-ASIR2/machines/defensa"
-
-# Preguntar al usuario qué tipo de máquina desea eliminar
-echo "¿Qué tipo de máquina quieres eliminar?"
-echo "1) Ataque"
-echo "2) Defensa"
-read -p "Selecciona una opción (1/2): " tipo
-
-if [[ "$tipo" == "1" ]]; then
-    DIR=$ATAQUE_DIR
-elif [[ "$tipo" == "2" ]]; then
-    DIR=$DEFENSA_DIR
-else
-    echo "Opción no válida. Saliendo..."
-    exit 1
-fi
-
-# Listar carpetas de máquinas disponibles
-echo "Máquinas disponibles en $DIR:"
-machines=($(ls -d "$DIR"/*/ | xargs -n 1 basename))
-
-if [ ${#machines[@]} -eq 0 ]; then
-    echo "No hay máquinas disponibles en esta categoría."
-    exit 1
-fi
-
-for i in "${!machines[@]}"; do
-    echo "$((i+1))) ${machines[$i]}"
-done
-
-# Pedir al usuario que elija una máquina
-read -p "Selecciona el número de la máquina que deseas eliminar: " choice
-
-# Validar entrada
-if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -le 0 ] || [ "$choice" -gt "${#machines[@]}" ]]; then
-    echo "Selección no válida. Saliendo..."
-    exit 1
-fi
-
-MACHINE_FOLDER="${machines[$((choice-1))]}"
-MACHINE_PATH="$DIR/$MACHINE_FOLDER"
-
-# Buscar el archivo de la máquina dentro de la carpeta seleccionada
-QCOW2_FILE=$(find "$MACHINE_PATH" -type f -name "*.qcow2")
-
-if [[ -z "$QCOW2_FILE" ]]; then
-    echo "No se encontró un archivo .qcow2 en $MACHINE_PATH. Saliendo..."
-    exit 1
-fi
-
-MACHINE_NAME=$(basename "$QCOW2_FILE" .qcow2)
-
-# Confirmación
-read -p "¿Seguro que quieres eliminar la máquina $MACHINE_NAME y su carpeta? (s/n): " confirm
-if [[ "$confirm" != "s" ]]; then
-    echo "Operación cancelada."
-    exit 1
-fi
-
-# Detener y eliminar la máquina en `virsh`
-echo "Eliminando máquina de virt-manager..."
-virsh destroy "$MACHINE_NAME" 2>/dev/null
-virsh undefine "$MACHINE_NAME" --remove-all-storage --nvram 2>/dev/null
-
-# Verificar si fue eliminada correctamente de virt-manager
-if virsh list --all | grep -q "$MACHINE_NAME"; then
-    echo "Error: La máquina sigue apareciendo en virt-manager. Revisa manualmente."
-    exit 1
-fi
-
-# Eliminar toda la carpeta de la máquina
-rm -rf "$MACHINE_PATH"
-
-echo "Máquina $MACHINE_NAME eliminada completamente de virt-manager y su carpeta ha sido borrada."
-```
-
-Este script permite **eliminar completamente una máquina virtual**, tanto desde el sistema de archivos como desde `virt-manager` utilizando `virsh`.
-
----
-
-### 1. Selección del tipo de máquina
-- Pregunta si se quiere eliminar una máquina de:
-  - `Ataque` (`~/Proyecto-ASIR2/machines/ataque`)
-  - `Defensa` (`~/Proyecto-ASIR2/machines/defensa`)
-- Asigna la ruta correspondiente en base a la elección.
-
----
-
-### 2. Listado de máquinas disponibles
-- Muestra todas las carpetas dentro del directorio seleccionado.
-- Cada carpeta se asume como una máquina virtual independiente.
-- Si no hay máquinas, finaliza el script con un aviso.
-
----
-
-### 3. Selección de la máquina a eliminar
-- El usuario elige el número de la máquina listada.
-- El script valida que la entrada sea un número válido.
-- Busca el archivo `.qcow2` dentro de la carpeta correspondiente.
-  - Si no encuentra un archivo `.qcow2`, cancela la operación.
-
----
-
-### 4. Confirmación y nombre de la máquina
-- Extrae el nombre de la máquina desde el archivo `.qcow2`.
-- Solicita confirmación al usuario para proceder con la eliminación.
-
----
-
-### 5. Eliminación desde `virt-manager`
-- Usa `virsh destroy` para detener la máquina si está en ejecución.
-- Luego la elimina con `virsh undefine` incluyendo `--remove-all-storage` y `--nvram`.
-- Verifica que la máquina haya desaparecido de la lista de `virsh`.
-
----
-
-### 6. Eliminación del directorio
-- Si la máquina fue eliminada correctamente de `virt-manager`, borra la carpeta correspondiente de forma recursiva (`rm -rf`).
-
----
-
-### Resultado final
-- La máquina queda completamente eliminada del sistema y de `virt-manager`.
 
 ---
