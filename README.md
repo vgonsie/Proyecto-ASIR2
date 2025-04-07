@@ -353,7 +353,7 @@ chmod +x scan_ports.sh
 
 ### ACTUALIZACIÓN DE TODOS LOS SCRIPTS
 
-### crea-maquina.sh
+### `crea-maquina.sh`
 
 ```bash
 #!/bin/bash
@@ -613,8 +613,6 @@ Muestra un mensaje final con:
    - `elegir_ubicacion`
    - `seleccionar_recursos`
    - `crear_vm`
-
----
 
 ---
 
