@@ -543,9 +543,12 @@ Se definen variables para aplicar colores en los mensajes del terminal (`GREEN`,
 - `BASE_PROYECTO="$HOME/Proyecto-ASIR2/machines"`
 - `ISO_DIR="$BASE_PROYECTO/iso"`
 
+---
+
 ### 2. Cabecera estética
 Se ha creado la función `show_header` que limpia la pantalla y muestra una cabecera con bordes y colores llamativos para cada sección del script.
 
+---
 
 ### 3. Selección del tipo de instalación
 Función: `buscar_imagen`
@@ -557,6 +560,8 @@ Función: `buscar_imagen`
 - Busca en el directorio `~/Proyecto-ASIR2/machines/iso` y muestra los archivos disponibles.
 - Guarda la ruta del archivo seleccionado en la variable `IMG_PATH`.
 
+---
+
 ### 4. Selección del directorio de destino
 Función: `elegir_ubicacion`
 
@@ -565,6 +570,8 @@ Función: `elegir_ubicacion`
   - [2] `defensa`
 
 - Se guarda la ruta de destino completa en la variable `VM_DIR`, usando el nombre que introdujo el usuario.
+
+---
 
 ### 5. Configuración de hardware
 Función: `seleccionar_recursos`
@@ -575,6 +582,8 @@ Permite al usuario seleccionar:
 - vCPU: 1, 2, 4, 8
 - Espacio en disco en GB (ingresado manualmente)
 - Tipo de red: NAT (default) o Bridge (br0)
+
+---
 
 ### 6. Creación de la máquina virtual
 Función: `crear_vm`
@@ -593,6 +602,8 @@ Muestra un mensaje final con:
 - Comandos útiles para iniciar y visualizar la máquina:
   - `virsh start <nombre>`
   - `virt-viewer <nombre>`
+
+---
 
 ### 7. Flujo principal del script
 1. Muestra la cabecera principal del script.
