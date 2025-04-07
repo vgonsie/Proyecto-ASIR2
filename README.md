@@ -314,7 +314,7 @@ while true; do
       ;;
   esac
 done
-  ```bash
+  ```
 
 ---
 
@@ -335,20 +335,19 @@ TARGET=$1
 echo "Escaneando puertos abiertos de: $TARGET"
 
 nmap -p- --open $TARGET
-  ```bash
+  ```
 
 ### Dar permisos al script
 
   ```bash
 chmod +x scan_ports.sh
-  ```bash
+  ```
 
 ### Ejecutar el script
 
   ```bash
 ./scan_ports.sh 192.168.1.1
-  ```bash
-```
+  ```
 
 ---
 
