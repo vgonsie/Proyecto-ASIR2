@@ -1056,8 +1056,9 @@ El script sigue esta secuencia:
 
 ### Ataque
 
----
+- Kali Linux
 
+---
 
 ### Defensa 
 
