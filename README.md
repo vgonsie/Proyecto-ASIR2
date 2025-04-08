@@ -1051,3 +1051,14 @@ El script sigue esta secuencia:
 7. `ask_destination_path`
 
 ---
+
+## MÁQUINAS A USAR EN EL LABORATORIO 
+
+### Ataque
+
+---
+
+
+### Defensa 
+
+- Metasploitable
