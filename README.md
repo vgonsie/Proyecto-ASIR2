@@ -1069,12 +1069,11 @@ El script sigue esta secuencia:
 
 ---
 
-## Escaneo de puertos a VM defensoras
+## 🔍 ESCANEO DE PUERTOS
 
-Usando el siguiente script, voy a escanear los puertos abiertos de la máquina creada.
+He creado un script con python para escanear puertos y buscar los puertos abiertos de las máquinas.
 
-
-### nmap-script.py
+### `nmap-script.py`
 
 ```bash
 import subprocess
