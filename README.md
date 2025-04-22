@@ -1065,7 +1065,7 @@ El script sigue esta secuencia:
 - Metasploitable
 - TinyCoreLinux
 - DebianMinimal (netinst)
-- Debian 24.04
+- Debian 24.04 (usuario: "debian" | contraseña: "root")
 
 ---
 
