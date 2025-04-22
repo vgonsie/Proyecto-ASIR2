@@ -1068,7 +1068,7 @@ El script sigue esta secuencia:
 
 ---
 
-## Escaneo de puertos a TinyCoreLinux
+## Escaneo de puertos a VM defensoras
 
 Usando el siguiente script, voy a escanear los puertos abiertos de la máquina creada.
 
