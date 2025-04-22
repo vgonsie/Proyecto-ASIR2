@@ -1065,6 +1065,7 @@ El script sigue esta secuencia:
 - Metasploitable
 - TinyCoreLinux
 - DebianMinimal (netinst)
+- Debian 24.04
 
 ---
 
@@ -1118,3 +1119,42 @@ Para ejecutarlo:
 sudo python3 nmap-script.py
 ```
 
+---
+
+### PRIMER ATAQUE CON NMAP
+
+He escaneado la IP de la máquina "Debian24" y no he encontrado puertos abiertos, así que he instalado openssh para abrir el puerto 22, y volver a escanear, el segundo escaneo fue todo un éxito, encontrando el puerto 22 abierto con el script.
+
+```bash
+┌──(kali㉿kali)-[~/Proyecto-ASIR2/scripts/funcionando]
+└─$ sudo python3 nmap-script.py
+Introduce la IP o rango de red que deseas escanear (Ejemplo: 192.168.1.1 o 192.168.1.0/24): 192.168.122.37
+
+Escaneando la IP: 192.168.122.37
+
+Resultado del escaneo:
+
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-04-22 13:35 CEST
+Nmap scan report for 192.168.122.37
+Host is up (0.00064s latency).
+Not shown: 999 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 9.6p1 Ubuntu 3ubuntu13.9 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 e2:88:36:07:f3:59:38:27:3c:b6:4d:b1:21:0b:c8:0d (ECDSA)
+|_  256 12:59:cb:74:56:9b:7f:ff:9b:6d:0b:8e:b1:1c:4b:04 (ED25519)
+MAC Address: 52:54:00:2F:3B:43 (QEMU virtual NIC)
+Device type: general purpose|router
+Running: Linux 4.X|5.X, MikroTik RouterOS 7.X
+OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5 cpe:/o:mikrotik:routeros:7 cpe:/o:linux:linux_kernel:5.6.3
+OS details: Linux 4.15 - 5.19, OpenWrt 21.02 (Linux 5.4), MikroTik RouterOS 7.2 - 7.5 (Linux 5.6.3)
+Network Distance: 1 hop
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   0.64 ms 192.168.122.37
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 1.89 seconds
+```
