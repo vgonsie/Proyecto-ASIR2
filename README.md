@@ -1110,3 +1110,10 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+Para ejecutarlo:
+
+```bash
+sudo python3 nmap-script.py
+```
+
