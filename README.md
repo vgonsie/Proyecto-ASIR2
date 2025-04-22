@@ -1064,6 +1064,7 @@ El script sigue esta secuencia:
 
 - Metasploitable
 - TinyCoreLinux
+- DebianMinimal (netinst)
 
 ---
 
