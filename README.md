@@ -1131,5 +1131,6 @@ He escaneado la IP de la máquina "Debian24" y no he encontrado puertos abiertos
 ### SCRIPT PYTHON FUERZA BRUTA CON HYDRA
 
 He creado un script con python, usando Hydra, para intentar entrar con fuerza bruta a una máquina ubuntu, usando listas de claves.
+El ataque ha sido exitoso, por el puerto SSH 22, descubriendo que la clave de la IP "192.168.122.37" con usuario "debian" tiene como contraseña "root".
 
 ![Primer ataque usando Hydra](capturas/primer-ataque-hydra.png)
