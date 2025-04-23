@@ -1125,3 +1125,11 @@ sudo python3 nmap-script.py
 He escaneado la IP de la máquina "Debian24" y no he encontrado puertos abiertos, así que he instalado openssh para abrir el puerto 22, y volver a escanear, el segundo escaneo fue todo un éxito, encontrando el puerto 22 abierto con el script.
 
 ![Primer escaneo nmap](capturas/primer-escaneo-nmap.png)
+
+---
+
+### SCRIPT PYTHON CON HYDRA DE FUERZA BRUTA
+
+He creado un script con python, usando Hydra, para intentar entrar con fuerza bruta a una máquina ubuntu, usando listas de claves.
+
+
