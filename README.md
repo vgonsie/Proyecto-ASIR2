@@ -1132,4 +1132,4 @@ He escaneado la IP de la máquina "Debian24" y no he encontrado puertos abiertos
 
 He creado un script con python, usando Hydra, para intentar entrar con fuerza bruta a una máquina ubuntu, usando listas de claves.
 
-![Primer ataque usando Hydra](capturas/primer-ataque-hydra.py.png)
+![Primer ataque usando Hydra](capturas/primer-ataque-hydra.png)
