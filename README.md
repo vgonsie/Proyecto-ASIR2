@@ -1,3 +1,24 @@
+## 📁 Estructura del Proyecto
+
+- [flask-app](./flask-app/)
+  - [app.py](./flask-app/app.py)
+  - [static](./flask-app/static/)
+    - [styles.css](./flask-app/static/styles.css)
+  - [templates](./flask-app/templates/)
+    - [index.html](./flask-app/templates/index.html)
+- [scripts](./scripts/)
+  - [funcionando](./scripts/funcionando/)
+    - [nmap-script.py](./scripts/funcionando/nmap-script.py)
+  - [no-probado](./scripts/no-probado/)
+    - [ataque-hydra.py](./scripts/no-probado/ataque-hydra.py)
+- [diccionarios](./diccionarios/)
+  - [rockyou.txt](./diccionarios/rockyou.txt)
+- [machines](./machines/)
+  - [ataque](./machines/ataque/)
+  - [defensa](./machines/defensa/)
+  - [iso](./machines/iso/)
+
+
 # Simulación Automática de Ataques y Respuesta con Python
 
 **Autor:** Vicente González Sierra  
