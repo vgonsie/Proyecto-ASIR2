@@ -1,6 +1,7 @@
 ## 🌳 Estructura del Proyecto
 
 `~/Proyecto-ASIR2/`
+
 ├── 📸 [capturas/](./capturas/) – Evidencias y pantallazos del proyecto  
 ├── 📂 [diccionarios/](./diccionarios/) – Listas de contraseñas para ataques de fuerza bruta  
 │   └── 📄 [rockyou.txt](./diccionarios/rockyou.txt)  
