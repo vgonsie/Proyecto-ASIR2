@@ -3,23 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escaneo Nmap</title>
+    <title>Simulación de Ataques</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Escaneo de Red con Nmap</h1>
-        <form action="/" method="POST">
-            <label for="ip">Introduce la IP o rango de red:</label>
-            <input type="text" id="ip" name="ip" placeholder="Ejemplo: 192.168.1.1 o 192.168.1.0/24" required>
-            <button type="submit">Escanear</button>
+        <h1>Simulación de Ataques</h1>
+        
+        <form method="POST">
+            <label for="ip">IP de destino:</label>
+            <input type="text" id="ip" name="ip" required>
+
+            <label for="diccionario">Diccionario:</label>
+            <select name="diccionario" required>
+                {% for diccionario in diccionarios %}
+                    <option value="{{ diccionario }}">{{ diccionario }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="usuario">Usuario:</label>
+            <input type="text" id="usuario" name="usuario" value="debian" required>
+
+            <label for="protocolo">Protocolo:</label>
+            <select name="protocolo" required>
+                <option value="ssh">SSH</option>
+                <option value="ftp">FTP</option>
+                <option value="http">HTTP</option>
+            </select>
+
+            <button type="submit" name="hydra">Ejecutar Hydra</button>
+            <button type="submit" name="nmap">Ejecutar Nmap</button>
         </form>
-        {% if result %}
-            <h2>Resultado del Escaneo:</h2>
-            <div class="result">
-                {{ result | safe }}
-            </div>
-        {% endif %}
+
+        <div class="result">
+            <h2>Resultados</h2>
+            {% if result %}
+                <h3>Resultados de Nmap:</h3>
+                <div>{{ result|safe }}</div>
+            {% endif %}
+            {% if hydra_result %}
+                <h3>Resultados de Hydra:</h3>
+                <div class="hydra-output">
+                    {{ hydra_result|safe }}
+                </div>
+            {% endif %}
+        </div>
     </div>
 </body>
 </html>
