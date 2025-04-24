@@ -1214,3 +1214,4 @@ python app.py
 
 He creado un entorno gráfico, donde poder usar los scripts con GUI.
 
+![Entorno gráfico flask](capturas/entorno-graf-flask.png)
