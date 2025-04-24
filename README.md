@@ -1170,4 +1170,8 @@ Una vez dentro del entorno, instalar flask.
 ```bash
 pip install flask
 ```
+Para iniciar la página
 
+```bash
+python app.py
+```
