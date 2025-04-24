@@ -1175,3 +1175,9 @@ Para iniciar la página
 ```bash
 python app.py
 ```
+
+---
+
+`app.py`
+
+[Ver app.py](flask-app/app.py)
