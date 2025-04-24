@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escaneo Nmap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Escaneo de Red con Nmap</h1>
+        <form action="/" method="POST">
+            <label for="ip">Introduce la IP o rango de red:</label>
+            <input type="text" id="ip" name="ip" placeholder="Ejemplo: 192.168.1.1 o 192.168.1.0/24" required>
+            <button type="submit">Escanear</button>
+        </form>
+        {% if result %}
+            <h2>Resultado del Escaneo:</h2>
+            <div class="result">
+                {{ result | safe }}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
