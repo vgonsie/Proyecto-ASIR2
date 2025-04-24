@@ -15,13 +15,13 @@
 │   ├── 🛡️ [defensa/](./machines/defensa/) – Máquinas defensivas  
 │   └── 💿 [iso/](./machines/iso/) – Archivos ISO utilizados  
 ├── ⚙️ [scripts/](./scripts/) – Automatización de tareas con Python  
-│   ├── ✅ [funcionando/](./scripts/funcionando/) – Scripts estables y probados  
-│   │   └── 🔍 [nmap-script.py](./scripts/funcionando/nmap-script.py)  
-│   └── 🧪 [no-probado/](./scripts/no-probado/) – Scripts en desarrollo o sin testear  
-│       └── 🦷 [ataque-hydra.py](./scripts/no-probado/ataque-hydra.py)  
+│   ├── 🐉 [ataque-hydra.py](./scripts/ataque-hydra.py) – Script para ataques con Hydra  
+│   ├── 🗑️ [borra-maquina.sh](./scripts/borra-maquina.sh) – Script para borrar máquinas virtuales  
+│   ├── 🔄 [convertir-vmdk-qcow2-actualizado.sh](./scripts/convertir-vmdk-qcow2-actualizado.sh) – Script para convertir imágenes de máquinas virtuales  
+│   ├── ⚙️ [crea-maquina.sh](./scripts/crea-maquina.sh) – Script para crear máquinas virtuales  
+│   ├── 🔍 [nmap-script.py](./scripts/nmap-script.py) – Script para escanear puertos con Nmap  
+│   └── 🧪 [subprocess](./scripts/subprocess) – Subprocesos en Python  
 └── 📘 [README.md](./README.md) – Documentación principal del proyecto
-
-
 
 
 # Simulación Automática de Ataques y Respuesta con Python
