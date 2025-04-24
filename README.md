@@ -11,10 +11,6 @@
 │   │   └── 📝 [index.html](./flask-app/templates/index.html)  
 │   └── 🎨 [static/](./flask-app/static/) – Archivos estáticos (CSS, JS, etc.)  
 │       └── 🧵 [styles.css](./flask-app/static/styles.css)  
-├── 🖥️ [machines/](./machines/) – Máquinas virtuales simuladas  
-│   ├── 💣 [ataque/](./machines/ataque/) – Máquinas ofensivas  
-│   ├── 🛡️ [defensa/](./machines/defensa/) – Máquinas defensivas  
-│   └── 💿 [iso/](./machines/iso/) – Archivos ISO utilizados  
 ├── ⚙️ [scripts/](./scripts/) – Automatización de tareas con Python  
 │   ├── 🐉 [ataque-hydra.py](./scripts/ataque-hydra.py) – Script para ataques con Hydra  
 │   ├── 🗑️ [borra-maquina.sh](./scripts/borra-maquina.sh) – Script para borrar máquinas virtuales  
