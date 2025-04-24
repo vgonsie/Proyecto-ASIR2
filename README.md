@@ -1,22 +1,27 @@
-## 📁 Estructura del Proyecto
+## 🌳 Estructura del Proyecto
 
-- [flask-app](./flask-app/)
-  - [app.py](./flask-app/app.py)
-  - [static](./flask-app/static/)
-    - [styles.css](./flask-app/static/styles.css)
-  - [templates](./flask-app/templates/)
-    - [index.html](./flask-app/templates/index.html)
-- [scripts](./scripts/)
-  - [funcionando](./scripts/funcionando/)
-    - [nmap-script.py](./scripts/funcionando/nmap-script.py)
-  - [no-probado](./scripts/no-probado/)
-    - [ataque-hydra.py](./scripts/no-probado/ataque-hydra.py)
-- [diccionarios](./diccionarios/)
-  - [rockyou.txt](./diccionarios/rockyou.txt)
-- [machines](./machines/)
-  - [ataque](./machines/ataque/)
-  - [defensa](./machines/defensa/)
-  - [iso](./machines/iso/)
+`~/Proyecto-ASIR2/`
+├── 📸 [capturas/](./capturas/) – Evidencias y pantallazos del proyecto  
+├── 📂 [diccionarios/](./diccionarios/) – Listas de contraseñas para ataques de fuerza bruta  
+│   └── 📄 [rockyou.txt](./diccionarios/rockyou.txt)  
+├── 🌐 [flask-app/](./flask-app/) – Interfaz web desarrollada con Flask  
+│   ├── 🐍 [app.py](./flask-app/app.py) – Código principal de la aplicación Flask  
+│   ├── 🧾 [templates/](./flask-app/templates/) – Plantillas HTML para la web  
+│   │   └── 📝 [index.html](./flask-app/templates/index.html)  
+│   └── 🎨 [static/](./flask-app/static/) – Archivos estáticos (CSS, JS, etc.)  
+│       └── 🧵 [styles.css](./flask-app/static/styles.css)  
+├── 🖥️ [machines/](./machines/) – Máquinas virtuales simuladas  
+│   ├── 💣 [ataque/](./machines/ataque/) – Máquinas ofensivas  
+│   ├── 🛡️ [defensa/](./machines/defensa/) – Máquinas defensivas  
+│   └── 💿 [iso/](./machines/iso/) – Archivos ISO utilizados  
+├── ⚙️ [scripts/](./scripts/) – Automatización de tareas con Python  
+│   ├── ✅ [funcionando/](./scripts/funcionando/) – Scripts estables y probados  
+│   │   └── 🔍 [nmap-script.py](./scripts/funcionando/nmap-script.py)  
+│   └── 🧪 [no-probado/](./scripts/no-probado/) – Scripts en desarrollo o sin testear  
+│       └── 🦷 [ataque-hydra.py](./scripts/no-probado/ataque-hydra.py)  
+└── 📘 [README.md](./README.md) – Documentación principal del proyecto
+
+
 
 
 # Simulación Automática de Ataques y Respuesta con Python
