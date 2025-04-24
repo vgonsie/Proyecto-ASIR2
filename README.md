@@ -1207,3 +1207,10 @@ python app.py
 `app.py`
 
 [Ver app.py](flask-app/app.py)
+
+---
+
+### ENTORNO GRÁFICO CON FLASK 
+
+He creado un entorno gráfico, donde poder usar los scripts con GUI.
+
