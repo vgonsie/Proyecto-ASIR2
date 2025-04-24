@@ -1,7 +1,6 @@
-/* Establecer un fondo oscuro y texto claro */
 body {
     background-color: #111;
-    color: #00ff00; /* Verde fosforescente */
+    color: #00ff00;
     font-family: 'Courier New', Courier, monospace;
     font-size: 16px;
     line-height: 1.6;
@@ -9,17 +8,6 @@ body {
     padding: 0;
 }
 
-/* Estilo de la cabecera */
-header {
-    background-color: #000;
-    color: #00ff00;
-    padding: 20px;
-    text-align: center;
-    font-size: 2rem;
-    letter-spacing: 2px;
-}
-
-/* Estilo de los contenedores */
 .container {
     width: 80%;
     margin: 20px auto;
@@ -27,17 +15,17 @@ header {
     background-color: #1a1a1a;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border: 2px solid #00ff00;
 }
 
-/* Estilo de los formularios */
 form {
     background-color: #222;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    border: 1px solid #00ff00;
 }
 
-/* Inputs y botones */
 input[type="text"], input[type="password"], select, button {
     background-color: #333;
     border: 1px solid #00ff00;
@@ -55,90 +43,103 @@ button {
     color: #111;
     font-weight: bold;
     transition: background-color 0.3s ease;
+    margin-top: 10px;
 }
 
 button:hover {
     background-color: #009900;
 }
 
-/* Estilo de los resultados */
-#result, #hydra_result {
+.result {
     background-color: #111;
     padding: 15px;
     border-radius: 8px;
     margin-top: 20px;
     box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    border: 1px solid #00ff00;
 }
 
-#hydra_result {
-    color: #ff0000;
+.hydra-output {
+    margin-top: 15px;
 }
 
-/* Estilo para los enlaces */
-a {
+.nmap-output {
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+}
+
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.result-table th, .result-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #00ff00;
+}
+
+.result-table th {
+    background-color: #1a1a1a;
     color: #00ff00;
-    text-decoration: none;
+    font-weight: bold;
 }
 
-a:hover {
-    text-decoration: underline;
+.result-table tr:hover {
+    background-color: #222;
 }
 
-/* Estilo de los encabezados y texto */
-h1, h2 {
-    color: #00ff00;
-    text-align: center;
-}
-
-p {
-    font-size: 1.2rem;
-    text-align: center;
-}
-
-/* Añadir un toque de estilo para la terminal */
 pre {
     background-color: #000;
     color: #00ff00;
-    padding: 20px;
-    border-radius: 8px;
-    font-family: 'Courier New', Courier, monospace;
+    padding: 15px;
+    border-radius: 5px;
     overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin-top: 10px;
 }
 
-/* Añadir un efecto de parpadeo a los textos importantes */
-.blink {
-    animation: blink-animation 1s steps(5, start) infinite;
+.error-message {
+    color: #ff5555;
+    font-weight: bold;
 }
 
-@keyframes blink-animation {
-    to {
-        visibility: hidden;
-    }
+.raw-output {
+    margin-top: 15px;
+    font-size: 0.9em;
+    opacity: 0.8;
 }
 
-/* Hacer que el contenido esté alineado al centro */
-.center {
+h1, h2, h3 {
+    color: #00ff00;
     text-align: center;
 }
 
-/* Agregar borde y sombra a los elementos de la página */
-.container, form, #result, #hydra_result {
-    border: 2px solid #00ff00;
-    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+h2 {
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 10px;
 }
 
-/* Añadir animación de "cargando" */
-.loader {
-    border: 16px solid #f3f3f3;
-    border-top: 16px solid #00ff00;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 2s linear infinite;
+.open-port {
+    color: #55ff55;
+    font-weight: bold;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.host-status {
+    color: #55ffff;
 }
 
+.scan-report {
+    color: #ffff55;
+}
+
+.mac-address {
+    color: #ff55ff;
+}
+
+.os-info {
+    color: #ffaa55;
+}

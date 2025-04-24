@@ -39,12 +39,42 @@
             <h2>Resultados</h2>
             {% if result %}
                 <h3>Resultados de Nmap:</h3>
-                <div>{{ result|safe }}</div>
+                <div class="nmap-output">{{ result|safe }}</div>
             {% endif %}
+            
             {% if hydra_result %}
                 <h3>Resultados de Hydra:</h3>
                 <div class="hydra-output">
-                    {{ hydra_result|safe }}
+                    {% if hydra_result is mapping %}
+                        {% if 'error' in hydra_result %}
+                            <div class="error-message">
+                                {{ hydra_result.error }}
+                                {% if 'raw_output' in hydra_result %}
+                                    <pre>{{ hydra_result.raw_output }}</pre>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <table class="result-table">
+                                <tr>
+                                    <th>Puerto</th>
+                                    <th>Host</th>
+                                    <th>Usuario</th>
+                                    <th>Contraseña</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ hydra_result.port }}</td>
+                                    <td>{{ hydra_result.host }}</td>
+                                    <td>{{ hydra_result.login }}</td>
+                                    <td>{{ hydra_result.password }}</td>
+                                </tr>
+                            </table>
+                            <div class="raw-output">
+                                <pre>{{ hydra_result.raw_output }}</pre>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <pre>{{ hydra_result }}</pre>
+                    {% endif %}
                 </div>
             {% endif %}
         </div>
