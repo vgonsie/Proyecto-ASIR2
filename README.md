@@ -1142,3 +1142,32 @@ El ataque ha sido exitoso, por el puerto SSH 22, descubriendo que la clave de la
 ```bash
 sudo python3 ataque-hydra.py
 ```
+
+---
+
+### INSTALAR UN ENTORNO VIRTUAL FLASK
+
+Instalar el paquete necesario
+
+```bash
+sudo apt install python3-venv
+```
+
+Crear el entorno virtual
+
+```bash
+python3 -m venv ~/Proyecto-ASIR2/flask-env
+```
+
+Activar el entorno
+
+```bash
+source ~/Proyecto-ASIR2/flask-env/bin/activate
+```
+
+Una vez dentro del entorno, instalar flask.
+
+```bash
+pip install flask
+```
+
