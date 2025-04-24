@@ -4,7 +4,6 @@
 
 ├── 📸 [capturas/](./capturas/) – Evidencias y pantallazos del proyecto  
 ├── 📂 [diccionarios/](./diccionarios/) – Listas de contraseñas para ataques de fuerza bruta  
-│   └── 📄 [rockyou.txt](./diccionarios/rockyou.txt)  
 ├── 🌐 [flask-app/](./flask-app/) – Interfaz web desarrollada con Flask  
 │   ├── 🐍 [app.py](./flask-app/app.py) – Código principal de la aplicación Flask  
 │   ├── 🧾 [templates/](./flask-app/templates/) – Plantillas HTML para la web  
