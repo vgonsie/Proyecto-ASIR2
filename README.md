@@ -1211,3 +1211,11 @@ python app.py
 He creado un entorno gráfico, donde poder usar los scripts con GUI.
 
 ![Entorno gráfico flask](capturas/entorno-graf-flask.png)
+
+---
+
+### CREACIÓN DE LOGIN/LOGOUT 
+
+Para más seguridad en la herramienta, he creado un login/logout para que sólo pueda usar la herramienta todo el que tenga el usuario y contraseña.
+
+![login](capturas/login.png)
