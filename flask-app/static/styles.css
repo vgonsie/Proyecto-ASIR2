@@ -1,116 +1,21 @@
+/* Estilos base */
 body {
-    background-color: #111;
+    background-color: #0d0d0d;
     color: #00ff00;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 16px;
+    font-family: 'Courier New', monospace;
     line-height: 1.6;
     margin: 0;
-    padding: 0;
+    padding: 20px;
 }
 
 .container {
-    width: 80%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #1a1a1a;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-    border: 2px solid #00ff00;
-}
-
-form {
-    background-color: #222;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #121212;
     border: 1px solid #00ff00;
-}
-
-input[type="text"], input[type="password"], select, button {
-    background-color: #333;
-    border: 1px solid #00ff00;
-    color: #00ff00;
-    padding: 10px;
-    font-size: 16px;
-    width: 100%;
-    margin-bottom: 10px;
     border-radius: 5px;
-}
-
-button {
-    cursor: pointer;
-    background-color: #00ff00;
-    color: #111;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
-}
-
-button:hover {
-    background-color: #009900;
-}
-
-.result {
-    background-color: #111;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
-    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-    border: 1px solid #00ff00;
-}
-
-.hydra-output {
-    margin-top: 15px;
-}
-
-.nmap-output {
-    font-family: 'Courier New', Courier, monospace;
-    white-space: pre-wrap;
-}
-
-.result-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-.result-table th, .result-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #00ff00;
-}
-
-.result-table th {
-    background-color: #1a1a1a;
-    color: #00ff00;
-    font-weight: bold;
-}
-
-.result-table tr:hover {
-    background-color: #222;
-}
-
-pre {
-    background-color: #000;
-    color: #00ff00;
-    padding: 15px;
-    border-radius: 5px;
-    overflow-x: auto;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    margin-top: 10px;
-}
-
-.error-message {
-    color: #ff5555;
-    font-weight: bold;
-}
-
-.raw-output {
-    margin-top: 15px;
-    font-size: 0.9em;
-    opacity: 0.8;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
 }
 
 h1, h2, h3 {
@@ -118,28 +23,235 @@ h1, h2, h3 {
     text-align: center;
 }
 
-h2 {
+h1 {
     border-bottom: 1px solid #00ff00;
     padding-bottom: 10px;
 }
 
-.open-port {
+/* Formulario */
+form {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.form-section {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #00ff00;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 8px;
+    background-color: #222;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    border-radius: 3px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    flex: 1;
+}
+
+.hydra-btn {
+    background-color: #ff5555;
+    color: white;
+}
+
+.nmap-btn {
+    background-color: #5555ff;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* Resultados */
+.results {
+    margin-top: 20px;
+}
+
+.result-section {
+    background-color: #1a1a1a;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+th {
+    background-color: #222;
+    color: #00ff00;
+}
+
+.state-open {
     color: #55ff55;
     font-weight: bold;
 }
 
-.host-status {
-    color: #55ffff;
+.password {
+    color: #ff5555;
+    font-weight: bold;
 }
 
-.scan-report {
-    color: #ffff55;
+.error {
+    color: #ff5555;
+    padding: 10px;
+    background-color: #2a1a1a;
+    border-radius: 3px;
 }
 
-.mac-address {
-    color: #ff55ff;
+.no-ports {
+    color: #888;
+    font-style: italic;
+    text-align: center;
 }
 
-.os-info {
-    color: #ffaa55;
+.toggle-btn {
+    background-color: #333;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    margin-top: 10px;
+}
+
+.raw-output {
+    display: none;
+    background-color: #000;
+    padding: 10px;
+    border-radius: 3px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 0.8em;
+    margin-top: 10px;
+    white-space: pre-wrap;
+}
+
+/* Efectos especiales */
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.blink {
+    animation: blink 1.5s infinite;
+}
+
+/* Añade esto al final de tu archivo CSS existente */
+
+/* Login styles */
+.login-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1a1a1a;
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+}
+
+.login-btn {
+    background-color: #00aa00;
+    color: white;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background-color: #008800;
+}
+
+/* Header styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #00ff00;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logout-btn {
+    background-color: #ff3333;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.logout-btn:hover {
+    background-color: #cc0000;
+}
+
+/* Añade esto a tu archivo CSS existente */
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #222;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 15px;
+}
+
+.login-form input[type="password"]:focus {
+    outline: none;
+    border-color: #55ff55;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+/* Mejora el estilo del botón de login */
+.login-btn {
+    background-color: #00aa00;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+    background-color: #008800;
 }

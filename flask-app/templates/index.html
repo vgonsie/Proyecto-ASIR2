@@ -3,81 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulación de Ataques</title>
+    <title>Herramienta de Pentesting</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Simulación de Ataques</h1>
+        <header>
+            <h1>Simulación de Ataques</h1>
+            <div class="user-info">
+                <span>Usuario: {{ username }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
+            </div>
+        </header>
         
         <form method="POST">
             <label for="ip">IP de destino:</label>
-            <input type="text" id="ip" name="ip" required>
+            <input type="text" id="ip" name="ip" placeholder="192.168.1.1" required>
 
-            <label for="diccionario">Diccionario:</label>
-            <select name="diccionario" required>
-                {% for diccionario in diccionarios %}
-                    <option value="{{ diccionario }}">{{ diccionario }}</option>
-                {% endfor %}
-            </select>
+            <div class="form-section">
+                <label for="diccionario">Diccionario:</label>
+                <select name="diccionario" required>
+                    {% for diccionario in diccionarios %}
+                        <option value="{{ diccionario }}">{{ diccionario }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-            <label for="usuario">Usuario:</label>
-            <input type="text" id="usuario" name="usuario" value="debian" required>
+            <div class="form-section">
+                <label for="usuario">Usuario:</label>
+                <input type="text" id="usuario" name="usuario" value="debian" required>
+            </div>
 
-            <label for="protocolo">Protocolo:</label>
-            <select name="protocolo" required>
-                <option value="ssh">SSH</option>
-                <option value="ftp">FTP</option>
-                <option value="http">HTTP</option>
-            </select>
+            <div class="form-section">
+                <label for="protocolo">Protocolo:</label>
+                <select name="protocolo" required>
+                    <option value="ssh">SSH</option>
+                    <option value="ftp">FTP</option>
+                    <option value="http">HTTP</option>
+                </select>
+            </div>
 
-            <button type="submit" name="hydra">Ejecutar Hydra</button>
-            <button type="submit" name="nmap">Ejecutar Nmap</button>
+            <div class="buttons">
+                <button type="submit" name="hydra" class="hydra-btn">Ejecutar Hydra</button>
+                <button type="submit" name="nmap" class="nmap-btn">Ejecutar Nmap</button>
+            </div>
         </form>
 
-        <div class="result">
-            <h2>Resultados</h2>
+        <div class="results">
             {% if result %}
-                <h3>Resultados de Nmap:</h3>
-                <div class="nmap-output">{{ result|safe }}</div>
-            {% endif %}
-            
-            {% if hydra_result %}
-                <h3>Resultados de Hydra:</h3>
-                <div class="hydra-output">
-                    {% if hydra_result is mapping %}
-                        {% if 'error' in hydra_result %}
-                            <div class="error-message">
-                                {{ hydra_result.error }}
-                                {% if 'raw_output' in hydra_result %}
-                                    <pre>{{ hydra_result.raw_output }}</pre>
-                                {% endif %}
-                            </div>
-                        {% else %}
-                            <table class="result-table">
+                <div class="result-section nmap-results">
+                    <h2>🔍 Resultados de Nmap</h2>
+                    {% if result.error %}
+                        <div class="error">{{ result.error }}</div>
+                    {% else %}
+                        <table class="info-table">
+                            <tr><th>Host:</th><td>{{ result.host }}</td></tr>
+                            <tr><th>Estado:</th><td>{{ result.status }}</td></tr>
+                            {% if result.mac %}<tr><th>MAC:</th><td>{{ result.mac }}</td></tr>{% endif %}
+                        </table>
+
+                        {% if result.ports %}
+                            <h3>📌 Puertos abiertos</h3>
+                            <table class="ports-table">
                                 <tr>
                                     <th>Puerto</th>
-                                    <th>Host</th>
-                                    <th>Usuario</th>
-                                    <th>Contraseña</th>
+                                    <th>Estado</th>
+                                    <th>Servicio</th>
+                                    <th>Versión</th>
                                 </tr>
+                                {% for port in result.ports %}
                                 <tr>
-                                    <td>{{ hydra_result.port }}</td>
-                                    <td>{{ hydra_result.host }}</td>
-                                    <td>{{ hydra_result.login }}</td>
-                                    <td>{{ hydra_result.password }}</td>
+                                    <td>{{ port.port }}</td>
+                                    <td class="state-{{ port.state }}">{{ port.state }}</td>
+                                    <td>{{ port.service }}</td>
+                                    <td>{{ port.version }}</td>
                                 </tr>
+                                {% endfor %}
                             </table>
-                            <div class="raw-output">
-                                <pre>{{ hydra_result.raw_output }}</pre>
-                            </div>
+                        {% else %}
+                            <p class="no-ports">No se encontraron puertos abiertos</p>
                         {% endif %}
-                    {% else %}
-                        <pre>{{ hydra_result }}</pre>
                     {% endif %}
+                    <button onclick="toggleRaw('nmap-raw')" class="toggle-btn">Mostrar/Ocultar output completo</button>
+                    <pre id="nmap-raw" class="raw-output">{{ result.raw_output }}</pre>
+                </div>
+            {% endif %}
+
+            {% if hydra_result %}
+                <div class="result-section hydra-results">
+                    <h2>🔑 Resultados de Hydra</h2>
+                    {% if hydra_result.error %}
+                        <div class="error">{{ hydra_result.error }}</div>
+                    {% else %}
+                        <table class="creds-table">
+                            <tr><th>Host:</th><td>{{ hydra_result.host }}</td></tr>
+                            <tr><th>Puerto:</th><td>{{ hydra_result.port }}</td></tr>
+                            <tr><th>Usuario:</th><td>{{ hydra_result.login }}</td></tr>
+                            <tr><th>Contraseña:</th><td class="password">{{ hydra_result.password }}</td></tr>
+                        </table>
+                    {% endif %}
+                    <button onclick="toggleRaw('hydra-raw')" class="toggle-btn">Mostrar/Ocultar output completo</button>
+                    <pre id="hydra-raw" class="raw-output">{{ hydra_result.raw_output }}</pre>
                 </div>
             {% endif %}
         </div>
     </div>
+
+    <script>
+        function toggleRaw(id) {
+            const element = document.getElementById(id);
+            element.style.display = element.style.display === 'none' ? 'block' : 'none';
+        }
+        // Ocultar outputs completos al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('nmap-raw').style.display = 'none';
+            document.getElementById('hydra-raw').style.display = 'none';
+        });
+    </script>
 </body>
 </html>
