@@ -2,23 +2,26 @@
 
 `~/Proyecto-ASIR2/`
 
-├── 📸 [capturas/](./capturas/) – Evidencias y pantallazos del proyecto  
-├── 📂 [diccionarios/](./diccionarios/) – Listas de contraseñas para ataques de fuerza bruta  
-├── 🌐 [flask-app/](./flask-app/) – Interfaz web desarrollada con Flask  
-│   ├── 🐍 [app.py](./flask-app/app.py) – Código principal de la aplicación Flask  
-│   ├── 🧾 [templates/](./flask-app/templates/) – Plantillas HTML para la web  
-│   │   ├── 📝 [index.html](./flask-app/templates/index.html)  
-|   |   └── 📝 [login.html](./flask-app/templates/login.html) - Inicio con login <br>
-│   └── 🎨 [static/](./flask-app/static/) – Archivos estáticos (CSS, JS, etc.)  
-│       └── 🧵 [styles.css](./flask-app/static/styles.css)  
-├── ⚙️ [scripts/](./scripts/) – Automatización de tareas con Python  
-│   ├── 🐉 [ataque-hydra.py](./scripts/ataque-hydra.py) – Script para ataques con Hydra  
-│   ├── 🗑️ [borra-maquina.sh](./scripts/borra-maquina.sh) – Script para borrar máquinas virtuales  
-│   ├── 🔄 [convertir-vmdk-qcow2-actualizado.sh](./scripts/convertir-vmdk-qcow2-actualizado.sh) – Script para convertir imágenes de máquinas virtuales  
-│   ├── ⚙️ [crea-maquina.sh](./scripts/crea-maquina.sh) – Script para crear máquinas virtuales  
-│   ├── 🔍 [nmap-script.py](./scripts/nmap-script.py) – Script para escanear puertos con Nmap  
-│   └── 🧪 [subprocess](./scripts/subprocess) – Subprocesos en Python  
-└── 📘 [README.md](./README.md) – Documentación principal del proyecto
+| 📁 Carpeta / 📄 Archivo | Descripción |
+|-------------------------|-------------|
+| 📸 [capturas/](./capturas/) | Evidencias y pantallazos del proyecto |
+| 📂 [diccionarios/](./diccionarios/) | Listas de contraseñas para ataques de fuerza bruta |
+| 🌐 [flask-app/](./flask-app/) | Interfaz web desarrollada con Flask |
+| ├── 🐍 [app.py](./flask-app/app.py) | Código principal de la aplicación Flask |
+| ├── 🧾 [templates/](./flask-app/templates/) | Plantillas HTML para la web |
+| │ ├── 📝 [index.html](./flask-app/templates/index.html) | Página principal |
+| │ └── 📝 [login.html](./flask-app/templates/login.html) | Inicio con login |
+| └── 🎨 [static/](./flask-app/static/) | Archivos estáticos (CSS, JS, etc.) |
+| &nbsp;&nbsp;&nbsp;&nbsp;└── 🧵 [styles.css](./flask-app/static/styles.css) | Estilos CSS de la web |
+| ⚙️ [scripts/](./scripts/) | Automatización de tareas con Python |
+| ├── 🐉 [ataque-hydra.py](./scripts/ataque-hydra.py) | Script para ataques con Hydra |
+| ├── 🗑️ [borra-maquina.sh](./scripts/borra-maquina.sh) | Script para borrar máquinas virtuales |
+| ├── 🔄 [convertir-vmdk-qcow2-actualizado.sh](./scripts/convertir-vmdk-qcow2-actualizado.sh) | Script para convertir imágenes de máquinas virtuales |
+| ├── ⚙️ [crea-maquina.sh](./scripts/crea-maquina.sh) | Script para crear máquinas virtuales |
+| ├── 🔍 [nmap-script.py](./scripts/nmap-script.py) | Script para escanear puertos con Nmap |
+| └── 🧪 [subprocess](./scripts/subprocess) | Subprocesos en Python |
+| 📘 [README.md](./README.md) | Documentación principal del proyecto |
+
 
 
 # Simulación Automática de Ataques y Respuesta con Python
