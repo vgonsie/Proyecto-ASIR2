@@ -8,7 +8,7 @@
 │   ├── 🐍 [app.py](./flask-app/app.py) – Código principal de la aplicación Flask  
 │   ├── 🧾 [templates/](./flask-app/templates/) – Plantillas HTML para la web  
 │   │   ├── 📝 [index.html](./flask-app/templates/index.html)  
-    |       └── 📝 [login.html](./flask-app/templates/login.html) - Inicio con login <br>
+|   |   └── 📝 [login.html](./flask-app/templates/login.html) - Inicio con login <br>
 │   └── 🎨 [static/](./flask-app/static/) – Archivos estáticos (CSS, JS, etc.)  
 │       └── 🧵 [styles.css](./flask-app/static/styles.css)  
 ├── ⚙️ [scripts/](./scripts/) – Automatización de tareas con Python  
