@@ -255,3 +255,136 @@ header {
 .login-btn:hover {
     background-color: #008800;
 }
+
+/* Botones estilo hacking */
+button, .login-btn, .logout-btn, .hydra-btn, .nmap-btn {
+    background-color: transparent;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 10px 20px;
+    border-radius: 0;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+}
+
+/* Efecto hover - Brillito hacker */
+button:hover, .login-btn:hover, .logout-btn:hover, .hydra-btn:hover, .nmap-btn:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+/* Efecto "pulsación" al hacer clic */
+button:active, .login-btn:active, .logout-btn:active, .hydra-btn:active, .nmap-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 0 3px rgba(0, 255, 0, 0.5);
+}
+
+/* Efecto especial para Hydra (rojo hacker) */
+.hydra-btn {
+    color: #ff5555;
+    border-color: #ff5555;
+    box-shadow: 0 0 5px rgba(255, 85, 85, 0.3);
+}
+
+.hydra-btn:hover {
+    background-color: rgba(255, 85, 85, 0.1);
+    box-shadow: 0 0 15px rgba(255, 85, 85, 0.5);
+    text-shadow: 0 0 5px rgba(255, 85, 85, 0.5);
+}
+
+/* Efecto especial para Logout (rojo más oscuro) */
+.logout-btn {
+    color: #ff3333;
+    border-color: #ff3333;
+    box-shadow: 0 0 5px rgba(255, 51, 51, 0.3);
+}
+
+.logout-btn:hover {
+    background-color: rgba(255, 51, 51, 0.1);
+    box-shadow: 0 0 15px rgba(255, 51, 51, 0.5);
+    text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+}
+
+/* Efecto de "glitch" ocasional (opcional) */
+@keyframes glitch {
+    0% { text-shadow: 1px 0 rgba(255, 0, 255, 0.7); }
+    25% { text-shadow: -1px 0 rgba(0, 255, 255, 0.7); }
+    50% { text-shadow: 1px 0 rgba(255, 255, 0, 0.7); }
+    100% { text-shadow: -1px 0 rgba(0, 255, 0, 0.7); }
+}
+
+button:hover::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    text-shadow: -1px 0 rgba(255, 0, 0, 0.7);
+    animation: glitch 0.3s linear infinite;
+}
+
+/* Estilo para el título principal */
+h1 {
+    color: #00ff00;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2.5rem;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+    position: relative;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+    font-family: 'Courier New', monospace;
+    border: none;
+    padding: 0;
+}
+
+h1::before {
+    color: #ff00ff;
+    z-index: -1;
+    animation: glitch-effect 3s infinite;
+}
+
+h1::after {
+    color: #00ffff;
+    z-index: -2;
+    animation: glitch-effect 2s infinite reverse;
+}
+
+h1 span.cursor {
+    display: inline-block;
+    width: 10px;
+    height: 20px;
+    background: #00ff00;
+    margin-left: 5px;
+    animation: blink 1s infinite;
+}
+
+/* Título principal SOLO en la página de inicio (index) */
+.main-title {
+    color: #00ff00;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    margin: 20px 0 40px 0;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+    position: relative;
+    padding-bottom: 15px;
+}
+
+/* Efecto "cursor terminal" opcional */
+.main-title::before {
+    content: ">";
+    position: absolute;
+    left: 50%;
+    bottom: -5px;
+    transform: translateX(-150px);
+    color: #00ff00;
+    animation: blink 1s infinite;
+}

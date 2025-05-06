@@ -1,55 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
 import subprocess
 import os
-import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'tu_clave_secreta_aleatoria'
+app.secret_key = 'tu_clave_secreta_aleatoria'  # Cambia esto en producción!
 
 # Configuración de Flask-Login
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-# --- Configuración de usuarios ---
-class User(UserMixin):
-    def __init__(self, id, username, password_hash):
-        self.id = id
-        self.username = username
-        self.password_hash = password_hash
-
-users = {
-    1: User(1, 'admin', generate_password_hash('admin'))
-}
-
-@login_manager.user_loader
-def load_user(user_id):
-    return users.get(int(user_id))
-
-# --- Funciones para base de datos ---
-def guardar_nmap_db(ip, ports):
-    conn = sqlite3.connect("resultados.db")
-    c = conn.cursor()
-    for port in ports:
-        c.execute('''
-            INSERT INTO nmap_resultados (ip, puerto, servicio, version)
-            VALUES (?, ?, ?, ?)
-        ''', (ip, port["port"], port["service"], port["version"]))
-    conn.commit()
-    conn.close()
-
-def guardar_hydra_db(ip, port, usuario, password, protocolo):
-    conn = sqlite3.connect("resultados.db")
-    c = conn.cursor()
-    c.execute('''
-        INSERT INTO hydra_resultados (ip, puerto, usuario, password, protocolo)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (ip, port, usuario, password, protocolo))
-    conn.commit()
-    conn.close()
-
-# --- Funciones principales ---
+# --- Funciones auxiliares ---
 def obtener_diccionarios():
     diccionario_dir = "/home/kali/Proyecto-ASIR2/diccionarios"
     try:
@@ -61,9 +23,7 @@ def run_nmap(ip):
     try:
         command = ["nmap", "-sV", ip]
         output = subprocess.check_output(command, stderr=subprocess.STDOUT)
-        data = parse_nmap_output(output.decode("utf-8"))
-        guardar_nmap_db(ip, data["ports"])
-        return data
+        return parse_nmap_output(output.decode("utf-8"))
     except subprocess.CalledProcessError as e:
         return {"error": f"Error en Nmap: {e.output.decode('utf-8')}", "raw_output": e.output.decode("utf-8")}
 
@@ -75,6 +35,7 @@ def parse_nmap_output(output):
         "mac": "",
         "raw_output": output
     }
+    
     for line in output.splitlines():
         if "Nmap scan report for" in line:
             data["host"] = line.split("for")[1].strip()
@@ -97,10 +58,10 @@ def run_hydra(ip, diccionario, usuario, protocolo):
     try:
         diccionario_dir = "/home/kali/Proyecto-ASIR2/diccionarios/"
         diccionario_path = os.path.join(diccionario_dir, diccionario)
-
+        
         if not os.path.exists(diccionario_path):
             return {"error": f"El diccionario {diccionario} no existe", "raw_output": ""}
-
+        
         command = [
             "hydra",
             "-l", usuario,
@@ -109,31 +70,42 @@ def run_hydra(ip, diccionario, usuario, protocolo):
             "-t", "4",
             "-vV"
         ]
-
+        
         output = subprocess.check_output(command, stderr=subprocess.STDOUT)
-        data = parse_hydra_output(output.decode('utf-8'), ip, usuario, protocolo)
-        return data
-
+        return parse_hydra_output(output.decode('utf-8'))
+    
     except subprocess.CalledProcessError as e:
         error_output = e.output.decode('utf-8')
         return {"error": "Hydra falló", "raw_output": error_output}
 
-def parse_hydra_output(output, ip, usuario, protocolo):
+def parse_hydra_output(output):
     for line in output.splitlines():
         if "host:" in line and "login:" in line and "password:" in line:
             parts = line.split()
-            port = parts[0].replace("[", "").replace("]", "")
-            login = parts[parts.index("login:")+1]
-            password = parts[parts.index("password:")+1]
-            guardar_hydra_db(ip, port, login, password, protocolo)
             return {
-                "port": port,
-                "host": ip,
-                "login": login,
-                "password": password,
+                "port": parts[0].replace("[", "").replace("]", ""),
+                "host": parts[parts.index("host:")+1],
+                "login": parts[parts.index("login:")+1],
+                "password": parts[parts.index("password:")+1],
                 "raw_output": output
             }
     return {"error": "No se encontraron credenciales válidas", "raw_output": output}
+
+# --- Configuración de usuarios ---
+class User(UserMixin):
+    def __init__(self, id, username, password_hash):
+        self.id = id
+        self.username = username
+        self.password_hash = password_hash
+
+# Usuario admin (usuario: admin, contraseña: admin)
+users = {
+    1: User(1, 'admin', generate_password_hash('admin'))
+}
+
+@login_manager.user_loader
+def load_user(user_id):
+    return users.get(int(user_id))
 
 # --- Rutas ---
 @app.route('/login', methods=['GET', 'POST'])
@@ -160,7 +132,7 @@ def index():
     result = None
     hydra_result = None
     diccionarios = obtener_diccionarios()
-
+    
     if request.method == "POST":
         ip = request.form["ip"]
         if 'nmap' in request.form:
@@ -170,12 +142,12 @@ def index():
             usuario = request.form["usuario"] or "debian"
             protocolo = request.form["protocolo"]
             hydra_result = run_hydra(ip, diccionario, usuario, protocolo)
-
-    return render_template("index.html",
-                           username=current_user.username,
-                           result=result,
-                           hydra_result=hydra_result,
-                           diccionarios=diccionarios)
+    
+    return render_template("index.html", 
+                         username=current_user.username,
+                         result=result, 
+                         hydra_result=hydra_result, 
+                         diccionarios=diccionarios)
 
 if __name__ == "__main__":
     app.run(debug=True)
