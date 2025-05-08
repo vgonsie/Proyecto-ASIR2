@@ -1,6 +1,9 @@
+# init_db.py
 import sqlite3
 
-conn = sqlite3.connect("/var/lib/grafana/resultados.db")
+DB_PATH = "/var/lib/grafana/resultados.db"
+
+conn = sqlite3.connect(DB_PATH)
 c = conn.cursor()
 
 # Tabla Nmap
@@ -28,6 +31,19 @@ CREATE TABLE IF NOT EXISTS hydra_resultados (
 )
 ''')
 
+# Tabla de ataques realizados
+c.execute('''
+CREATE TABLE IF NOT EXISTS ataques_realizados (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ip TEXT,
+    tipo_ataque TEXT,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+''')
+
+# No hace falta crear sqlite_sequence → ya la gestiona SQLite internamente
+
 conn.commit()
 conn.close()
-print("✔ Base de datos creada en /var/lib/grafana/resultados.db")
+
+print(f"✔ Base de datos creada/actualizada en {DB_PATH}")

@@ -15,25 +15,36 @@
             </div>
         </header>
 
+        {% if message %}
+        <div class="message-box">{{ message }}</div>
+        {% endif %}
+
         <form method="POST">
             <label for="ip">IP de destino:</label>
             <input type="text" id="ip" name="ip" placeholder="192.168.1.1" required>
 
+            <!-- Tipo de ataque -->
             <div class="form-section">
+                <label for="tipo_ataque">Tipo de ataque:</label>
+                <select name="tipo_ataque" required>
+                    <option value="nmap">Escaneo Nmap (-sV)</option>
+                    <option value="hydra">Ataque Hydra</option>
+                    <option value="syn_flood">DoS SYN Flood</option>
+                </select>
+            </div>
+
+            <!-- Campos para Hydra -->
+            <div class="form-section" id="hydra-fields" style="display:none;">
                 <label for="diccionario">Diccionario:</label>
                 <select name="diccionario" required>
                     {% for diccionario in diccionarios %}
                         <option value="{{ diccionario }}">{{ diccionario }}</option>
                     {% endfor %}
                 </select>
-            </div>
 
-            <div class="form-section">
                 <label for="usuario">Usuario:</label>
-                <input type="text" id="usuario" name="usuario" value="debian" required>
-            </div>
+                <input type="text" name="usuario" value="debian" required>
 
-            <div class="form-section">
                 <label for="protocolo">Protocolo:</label>
                 <select name="protocolo" required>
                     <option value="ssh">SSH</option>
@@ -42,82 +53,21 @@
                 </select>
             </div>
 
+            <!-- Botones -->
             <div class="buttons">
-                <button type="submit" name="hydra" class="hydra-btn">Ejecutar Hydra</button>
-                <button type="submit" name="nmap" class="nmap-btn">Ejecutar Nmap</button>
+                <button type="submit" name="submit" class="hydra-btn">Ejecutar Ataque</button>
             </div>
         </form>
 
-        <div class="results">
-            {% if result %}
-                <div class="result-section nmap-results">
-                    <h2>🔍 Resultados de Nmap</h2>
-                    {% if result.error %}
-                        <div class="error">{{ result.error | e }}</div>
-                    {% else %}
-                        <table class="info-table">
-                            <tr><th>Host:</th><td>{{ result.host | e }}</td></tr>
-                            <tr><th>Estado:</th><td>{{ result.status | e }}</td></tr>
-                            {% if result.mac %}<tr><th>MAC:</th><td>{{ result.mac | e }}</td></tr>{% endif %}
-                        </table>
+        <!-- Scripts para mostrar campos solo si es Hydra -->
+        <script>
+            const tipoAtaque = document.querySelector("[name=tipo_ataque]");
+            const hydraFields = document.getElementById("hydra-fields");
 
-                        {% if result.ports %}
-                            <h3>📌 Puertos abiertos</h3>
-                            <table class="ports-table">
-                                <tr>
-                                    <th>Puerto</th>
-                                    <th>Estado</th>
-                                    <th>Servicio</th>
-                                    <th>Versión</th>
-                                </tr>
-                                {% for port in result.ports %}
-                                <tr>
-                                    <td>{{ port.port | e }}</td>
-                                    <td class="state-{{ port.state }}">{{ port.state | e }}</td>
-                                    <td>{{ port.service | e }}</td>
-                                    <td>{{ port.version | e }}</td>
-                                </tr>
-                                {% endfor %}
-                            </table>
-                        {% else %}
-                            <p class="no-ports">No se encontraron puertos abiertos</p>
-                        {% endif %}
-                    {% endif %}
-                    <button onclick="toggleRaw('nmap-raw')" class="toggle-btn">Mostrar/Ocultar output completo</button>
-                    <pre id="nmap-raw" class="raw-output">{{ result.raw_output | e }}</pre>
-                </div>
-            {% endif %}
-
-            {% if hydra_result %}
-                <div class="result-section hydra-results">
-                    <h2>🔑 Resultados de Hydra</h2>
-                    {% if hydra_result.error %}
-                        <div class="error">{{ hydra_result.error | e }}</div>
-                    {% else %}
-                        <table class="creds-table">
-                            <tr><th>Host:</th><td>{{ hydra_result.host | e }}</td></tr>
-                            <tr><th>Puerto:</th><td>{{ hydra_result.port | e }}</td></tr>
-                            <tr><th>Usuario:</th><td>{{ hydra_result.login | e }}</td></tr>
-                            <tr><th>Contraseña:</th><td class="password">{{ hydra_result.password | e }}</td></tr>
-                        </table>
-                    {% endif %}
-                    <button onclick="toggleRaw('hydra-raw')" class="toggle-btn">Mostrar/Ocultar output completo</button>
-                    <pre id="hydra-raw" class="raw-output">{{ hydra_result.raw_output | e }}</pre>
-                </div>
-            {% endif %}
-        </div>
+            tipoAtaque.addEventListener("change", () => {
+                hydraFields.style.display = (tipoAtaque.value === "hydra") ? "block" : "none";
+            });
+        </script>
     </div>
-
-    <script>
-        function toggleRaw(id) {
-            const element = document.getElementById(id);
-            element.style.display = element.style.display === 'none' ? 'block' : 'none';
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('nmap-raw').style.display = 'none';
-            document.getElementById('hydra-raw').style.display = 'none';
-        });
-    </script>
 </body>
 </html>
