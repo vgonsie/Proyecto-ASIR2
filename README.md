@@ -1229,3 +1229,17 @@ Para más seguridad en la herramienta, he creado un login/logout para que sólo 
 He instalado grafana y he implementado una base de datos con SQLite para guardar los datos para hacer gráficas con Grafana.
 
 ![grafana](grafana)
+
+---
+
+### AÑADIR FUNCIONALIDADES
+
+## SCAPY
+
+Instalar Scapy para poder hacer ataques DoS y así tener nuevas funcionalidades en el proyecto.
+
+```bash
+pip install scapy
+```
+
+He modificado los archivos ![init_db.py](grafana/init_db.py), ![app.py](flask-app/app.py) y ![index.html](templates/index.html)
