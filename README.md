@@ -1228,3 +1228,4 @@ Para más seguridad en la herramienta, he creado un login/logout para que sólo 
 
 He instalado grafana y he implementado una base de datos con SQLite para guardar los datos para hacer gráficas con Grafana.
 
+![grafana](grafana)
