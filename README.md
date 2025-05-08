@@ -1232,9 +1232,9 @@ He instalado grafana y he implementado una base de datos con SQLite para guardar
 
 ---
 
-### AÑADIR FUNCIONALIDADES
+## AÑADIR FUNCIONALIDADES
 
-## SCAPY
+### SCAPY
 
 Instalar Scapy para poder hacer ataques DoS y así tener nuevas funcionalidades en el proyecto.
 
