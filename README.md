@@ -1242,4 +1242,4 @@ Instalar Scapy para poder hacer ataques DoS y así tener nuevas funcionalidades 
 pip install scapy
 ```
 
-He modificado los archivos ![init_db.py](grafana/init_db.py), ![app.py](flask-app/app.py) e ![index.html](flask-app/templates/index.html)
+He modificado los archivos ![init_db.py](flask-app/init_db.py), ![app.py](flask-app/app.py) e ![index.html](flask-app/templates/index.html)
