@@ -1221,3 +1221,10 @@ He creado un entorno gráfico, donde poder usar los scripts con GUI.
 Para más seguridad en la herramienta, he creado un login/logout para que sólo pueda usar la herramienta todo el que tenga el usuario y contraseña.
 
 ![login](capturas/login.png)
+
+---
+
+### IMPLEMENTACIÓN DE GRAFANA Y CREACIÓN DE BASE DE DATOS
+
+He instalado grafana y he implementado una base de datos con SQLite para guardar los datos para hacer gráficas con Grafana.
+
