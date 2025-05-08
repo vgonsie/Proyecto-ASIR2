@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Herramienta de Pentesting</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -15,7 +14,7 @@
                 <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
             </div>
         </header>
-        
+
         <form method="POST">
             <label for="ip">IP de destino:</label>
             <input type="text" id="ip" name="ip" placeholder="192.168.1.1" required>
@@ -54,12 +53,12 @@
                 <div class="result-section nmap-results">
                     <h2>🔍 Resultados de Nmap</h2>
                     {% if result.error %}
-                        <div class="error">{{ result.error }}</div>
+                        <div class="error">{{ result.error | e }}</div>
                     {% else %}
                         <table class="info-table">
-                            <tr><th>Host:</th><td>{{ result.host }}</td></tr>
-                            <tr><th>Estado:</th><td>{{ result.status }}</td></tr>
-                            {% if result.mac %}<tr><th>MAC:</th><td>{{ result.mac }}</td></tr>{% endif %}
+                            <tr><th>Host:</th><td>{{ result.host | e }}</td></tr>
+                            <tr><th>Estado:</th><td>{{ result.status | e }}</td></tr>
+                            {% if result.mac %}<tr><th>MAC:</th><td>{{ result.mac | e }}</td></tr>{% endif %}
                         </table>
 
                         {% if result.ports %}
@@ -73,10 +72,10 @@
                                 </tr>
                                 {% for port in result.ports %}
                                 <tr>
-                                    <td>{{ port.port }}</td>
-                                    <td class="state-{{ port.state }}">{{ port.state }}</td>
-                                    <td>{{ port.service }}</td>
-                                    <td>{{ port.version }}</td>
+                                    <td>{{ port.port | e }}</td>
+                                    <td class="state-{{ port.state }}">{{ port.state | e }}</td>
+                                    <td>{{ port.service | e }}</td>
+                                    <td>{{ port.version | e }}</td>
                                 </tr>
                                 {% endfor %}
                             </table>
@@ -85,7 +84,7 @@
                         {% endif %}
                     {% endif %}
                     <button onclick="toggleRaw('nmap-raw')" class="toggle-btn">Mostrar/Ocultar output completo</button>
-                    <pre id="nmap-raw" class="raw-output">{{ result.raw_output }}</pre>
+                    <pre id="nmap-raw" class="raw-output">{{ result.raw_output | e }}</pre>
                 </div>
             {% endif %}
 
@@ -93,17 +92,17 @@
                 <div class="result-section hydra-results">
                     <h2>🔑 Resultados de Hydra</h2>
                     {% if hydra_result.error %}
-                        <div class="error">{{ hydra_result.error }}</div>
+                        <div class="error">{{ hydra_result.error | e }}</div>
                     {% else %}
                         <table class="creds-table">
-                            <tr><th>Host:</th><td>{{ hydra_result.host }}</td></tr>
-                            <tr><th>Puerto:</th><td>{{ hydra_result.port }}</td></tr>
-                            <tr><th>Usuario:</th><td>{{ hydra_result.login }}</td></tr>
-                            <tr><th>Contraseña:</th><td class="password">{{ hydra_result.password }}</td></tr>
+                            <tr><th>Host:</th><td>{{ hydra_result.host | e }}</td></tr>
+                            <tr><th>Puerto:</th><td>{{ hydra_result.port | e }}</td></tr>
+                            <tr><th>Usuario:</th><td>{{ hydra_result.login | e }}</td></tr>
+                            <tr><th>Contraseña:</th><td class="password">{{ hydra_result.password | e }}</td></tr>
                         </table>
                     {% endif %}
                     <button onclick="toggleRaw('hydra-raw')" class="toggle-btn">Mostrar/Ocultar output completo</button>
-                    <pre id="hydra-raw" class="raw-output">{{ hydra_result.raw_output }}</pre>
+                    <pre id="hydra-raw" class="raw-output">{{ hydra_result.raw_output | e }}</pre>
                 </div>
             {% endif %}
         </div>
@@ -114,8 +113,8 @@
             const element = document.getElementById(id);
             element.style.display = element.style.display === 'none' ? 'block' : 'none';
         }
-        // Ocultar outputs completos al cargar
-        document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('nmap-raw').style.display = 'none';
             document.getElementById('hydra-raw').style.display = 'none';
         });

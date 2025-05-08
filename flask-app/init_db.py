@@ -1,11 +1,9 @@
-# init_db.py
 import sqlite3
 
-# Crear conexión
-conn = sqlite3.connect("resultados.db")
+conn = sqlite3.connect("/var/lib/grafana/resultados.db")
 c = conn.cursor()
 
-# Crear tabla para resultados de Nmap
+# Tabla Nmap
 c.execute('''
 CREATE TABLE IF NOT EXISTS nmap_resultados (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,7 +15,7 @@ CREATE TABLE IF NOT EXISTS nmap_resultados (
 )
 ''')
 
-# Crear tabla para resultados de Hydra
+# Tabla Hydra
 c.execute('''
 CREATE TABLE IF NOT EXISTS hydra_resultados (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,4 +30,4 @@ CREATE TABLE IF NOT EXISTS hydra_resultados (
 
 conn.commit()
 conn.close()
-print("✔ Base de datos creada con éxito (resultados.db)")
+print("✔ Base de datos creada en /var/lib/grafana/resultados.db")

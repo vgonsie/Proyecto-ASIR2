@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Pentest Tool</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -11,7 +10,7 @@
         <h1 class="blink">🔐 Acceso Restringido</h1>
         <form method="POST" class="login-form">
             {% if error %}
-                <div class="error">{{ error }}</div>
+                <div class="error">{{ error | e }}</div>
             {% endif %}
             <div class="form-section">
                 <label for="username">Usuario:</label>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboards - Pentest Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Análisis Profesionales</h1>
+            <a href="{{ url_for('index') }}" class="back-btn">← Volver</a>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-container">
+                <h3>🔓 Resultados Hydra</h3>
+                <iframe 
+                    src="{{ url_for('grafana_proxy', dashboard='hydra') }}"
+                    width="100%" 
+                    height="500"
+                    frameborder="0">
+                </iframe>
+            </div>
+
+            <div class="dashboard-container">
+                <h3>🛡️ Escaneos Nmap</h3>
+                <iframe 
+                    src="{{ url_for('grafana_proxy', dashboard='nmap') }}"
+                    width="100%"
+                    height="500"
+                    frameborder="0">
+                </iframe>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
