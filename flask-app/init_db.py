@@ -37,11 +37,10 @@ CREATE TABLE IF NOT EXISTS ataques_realizados (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ip TEXT,
     tipo_ataque TEXT,
+    puerto TEXT,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
 ''')
-
-# No hace falta crear sqlite_sequence → ya la gestiona SQLite internamente
 
 conn.commit()
 conn.close()
