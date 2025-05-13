@@ -1245,5 +1245,11 @@ pip install scapy
 He modificado los archivos ![init_db.py](flask-app/init_db.py), ![app.py](flask-app/app.py) e ![index.html](flask-app/templates/index.html)
 
 ---
+### NUEVA FUNCIONALIDAD: IDENTIFICAR INTERFACES DE RED
 
-Instalar paramiko para usar ssh en interfaz
+Instalar paramiko para usar ssh en el identificador de interfaz de red
+
+```bash
+pip install paramiko
+```
+Modificación de los archivos ![app.py](flask-app/app.py) e ![index.html](flask-app/templates/index.html).
