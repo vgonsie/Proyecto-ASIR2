@@ -1254,6 +1254,8 @@ pip install paramiko
 ```
 Modificación de los archivos ![app.py](flask-app/app.py) e ![index.html](flask-app/templates/index.html).
 
+---
+
 ### INSTALAR WAZUH
 
 Error al instalar docker, así que he tenido que borrar la caché
