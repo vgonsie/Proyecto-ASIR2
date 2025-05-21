@@ -1253,3 +1253,26 @@ Instalar paramiko para usar ssh en el identificador de interfaz de red
 pip install paramiko
 ```
 Modificación de los archivos ![app.py](flask-app/app.py) e ![index.html](flask-app/templates/index.html).
+
+### INSTALAR WAZUH
+
+Error al instalar docker, así que he tenido que borrar la caché
+
+```bash
+sudo rm -rf /var/lib/apt/lists/*
+sudo mkdir -p /var/lib/apt/lists/
+```
+Instalar docker
+
+```bash
+sudo apt install docker.io -y
+sudo apt install docker-compose -y
+```
+
+Iniciar contenedores de Wazuh
+
+```bash
+mkdir -p ~/wazuh && cd ~/wazuh
+curl -so docker-compose.yml https://raw.githubusercontent.com/wazuh/wazuh-docker/v4.6.0/docker-compose.yml
+```
+
