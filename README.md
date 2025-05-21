@@ -1272,7 +1272,10 @@ sudo apt install docker-compose -y
 Iniciar contenedores de Wazuh
 
 ```bash
-mkdir -p ~/wazuh && cd ~/wazuh
-curl -so docker-compose.yml https://raw.githubusercontent.com/wazuh/wazuh-docker/v4.6.0/docker-compose.yml
+git clone https://github.com/wazuh/wazuh-docker.git -b v4.12.0
 ```
 
+```bash
+cd wazuh-docker/single-node
+docker-compose up -d
+```
