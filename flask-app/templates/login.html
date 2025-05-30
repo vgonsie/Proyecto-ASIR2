@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Login - Pentest Tool</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🔐 Acceso Restringido</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 <body>
-    <div class="container">
-        <h1 class="blink">🔐 Acceso Restringido</h1>
-        <form method="POST" class="login-form">
-            {% if error %}
-                <div class="error">{{ error | e }}</div>
-            {% endif %}
-            <div class="form-section">
-                <label for="username">Usuario:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-section">
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="login-btn">Ingresar</button>
-        </form>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <h1>🔐 ACCESO RESTRINGIDO</h1>
+      {% if error %}
+        <div class="alert error">{{ error }}</div>
+      {% endif %}
+      <form method="POST" class="login-form">
+        <div class="field">
+          <label for="username">Usuario:</label>
+          <input type="text" id="username" name="username" required autofocus />
+        </div>
+        <div class="field">
+          <label for="password">Contraseña:</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit" class="btn login-btn">INGRESAR</button>
+      </form>
     </div>
+  </div>
 </body>
 </html>
