@@ -1,174 +1,106 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>⚡ Pentest Tool</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <meta charset="UTF-8">
+    <title>Panel de Ataques</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <div class="wrapper">
-    <header>
-      <h1>⚡ Pentest Tool</h1>
-      <div class="user-bar">
-        <span>Usuario: {{ username }}</span>
-        <a href="{{ url_for('logout') }}">🔒 Cerrar sesión</a>
-      </div>
-    </header>
+    <div class="container">
+        <header>
+            <h1>🔧 Herramienta de Pentesting</h1>
+            <div class="user-info">
+                Usuario: <strong>{{ username }}</strong> |
+                <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+            </div>
+        </header>
 
-    {% if message %}
-      <div class="alert success">{{ message }}</div>
-    {% endif %}
-
-    <form method="POST" class="attack-form">
-      <div class="field">
-        <label for="ip">IP de destino:</label>
-        <input type="text" id="ip" name="ip" placeholder="192.168.1.1" required />
-      </div>
-
-      <div class="field">
-        <label for="tipo_ataque">Tipo de ataque:</label>
-        <select id="tipo_ataque" name="tipo_ataque" required>
-          <option value="nmap">🔍 Escaneo Nmap</option>
-          <option value="hydra">🔑 Ataque Hydra</option>
-          <option value="syn_flood">💥 SYN Flood</option>
-          <option value="sniff">📡 Sniffing Pasivo</option>
-          <option value="ssh_ip_a">🔐 SSH + ip a</option>
-        </select>
-      </div>
-
-      <div class="field hidden" id="puerto-syn">
-        <label for="puerto">Puerto:</label>
-        <select name="puerto">
-          <option>22</option><option>80</option><option>443</option>
-          <option>21</option><option>25</option><option>53</option>
-        </select>
-      </div>
-
-      <div class="field hidden" id="duracion-fields">
-        <label for="duracion">Duración (s):</label>
-        <input type="number" name="duracion" value="10" min="5" max="300"/>
-      </div>
-
-      <div class="field hidden" id="hydra-fields">
-        <label for="diccionario">Diccionario:</label>
-        <select name="diccionario">
-          {% for d in diccionarios %}
-            <option>{{ d }}</option>
-          {% endfor %}
-        </select>
-        <label for="usuario">Usuario:</label>
-        <input type="text" name="usuario" value="debian" />
-        <label for="protocolo">Protocolo:</label>
-        <select name="protocolo">
-          <option>ssh</option><option>ftp</option><option>http</option>
-        </select>
-      </div>
-
-      <div class="field hidden" id="sniff-fields">
-        <label for="interfaz">Interfaz:</label>
-        <select name="interfaz">
-          {% for iface in interfaz_list %}
-            <option {% if iface==interfaz_predicha %}selected{% endif %}>{{ iface }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="field hidden" id="ssh-ipa-fields">
-        <label for="ssh_usuario">SSH Usuario:</label>
-        <input type="text" name="ssh_usuario" value="root" />
-        <label for="ssh_contrasena">SSH Contraseña:</label>
-        <input type="password" name="ssh_contrasena" />
-      </div>
-
-      <button type="submit" class="btn execute">▶ Ejecutar</button>
-    </form>
-
-    <section class="results">
-
-      {% if result %}
-      <div class="card">
-        <h2>🔍 Resultados Nmap</h2>
-        {% if result.error %}
-          <pre class="error">{{ result.error }}</pre>
-        {% else %}
-          <table>
-            <tr><th>Host</th><td>{{ result.host }}</td></tr>
-            <tr><th>Estado</th><td>{{ result.status }}</td></tr>
-            {% if result.mac %}<tr><th>MAC</th><td>{{ result.mac }}</td></tr>{% endif %}
-          </table>
-          {% if result.ports %}
-          <h3>Puertos Abiertos</h3>
-          <table class="ports">
-            <tr><th>Puerto</th><th>Estado</th><th>Svc</th><th>Versión</th></tr>
-            {% for p in result.ports %}
-              <tr>
-                <td>{{ p.port }}</td>
-                <td class="state-{{ p.state }}">{{ p.state }}</td>
-                <td>{{ p.service }}</td>
-                <td>{{ p.version }}</td>
-              </tr>
-            {% endfor %}
-          </table>
-          {% endif %}
+        {% if message %}
+            <div class="message-box">{{ message }}</div>
         {% endif %}
-      </div>
-      {% endif %}
 
-      {% if hydra_result %}
-      <div class="card">
-        <h2>🔑 Resultados Hydra</h2>
-        {% if hydra_result.error %}
-          <pre class="error">{{ hydra_result.error }}</pre>
-        {% else %}
-          <table>
-            <tr><th>Host</th><td>{{ hydra_result.host }}</td></tr>
-            <tr><th>Puerto</th><td>{{ hydra_result.port }}</td></tr>
-            <tr><th>Usuario</th><td>{{ hydra_result.login }}</td></tr>
-            <tr><th>Pass</th><td class="password">{{ hydra_result.password }}</td></tr>
-          </table>
+        <form method="POST">
+            <label for="ip">IP de destino:</label>
+            <input type="text" name="ip" required placeholder="192.168.1.100">
+
+            <label for="tipo_ataque">Tipo de ataque:</label>
+            <select name="tipo_ataque" required>
+                <option value="nmap">Escaneo Nmap (-sV)</option>
+                {% if role == 'admin' %}
+                    <option value="hydra">Ataque Hydra</option>
+                {% endif %}
+            </select>
+
+            {% if role == 'admin' %}
+            <div id="hydra-fields">
+                <label for="diccionario">Diccionario:</label>
+                <select name="diccionario">
+                    {% for d in diccionarios %}
+                        <option value="{{ d }}">{{ d }}</option>
+                    {% endfor %}
+                </select>
+                <label for="usuario">Usuario:</label>
+                <input type="text" name="usuario" value="debian" required>
+                <label for="protocolo">Protocolo:</label>
+                <select name="protocolo">
+                    <option value="ssh">SSH</option>
+                    <option value="ftp">FTP</option>
+                    <option value="http">HTTP</option>
+                </select>
+            </div>
+            {% endif %}
+
+            <button type="submit">Ejecutar</button>
+        </form>
+
+        {% if result %}
+        <div class="result-section">
+            <h2>🔍 Resultados de Nmap</h2>
+            {% if result.error %}
+                <div class="error">{{ result.error }}</div>
+            {% else %}
+                <table class="info-table">
+                    <tr><th>Host</th><td>{{ result.host }}</td></tr>
+                    <tr><th>Estado</th><td>{{ result.status }}</td></tr>
+                    {% if result.mac %}<tr><th>MAC</th><td>{{ result.mac }}</td></tr>{% endif %}
+                </table>
+                {% if result.ports %}
+                    <h3>Puertos detectados:</h3>
+                    <table class="ports-table">
+                        <tr><th>Puerto</th><th>Estado</th><th>Servicio</th><th>Versión</th></tr>
+                        {% for p in result.ports %}
+                        <tr>
+                            <td>{{ p.port }}</td>
+                            <td class="state-{{ p.state }}">{{ p.state }}</td>
+                            <td>{{ p.service }}</td>
+                            <td>{{ p.version }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% else %}
+                    <p>No se encontraron puertos abiertos.</p>
+                {% endif %}
+                <pre class="raw-output">{{ result.raw_output }}</pre>
+            {% endif %}
+        </div>
         {% endif %}
-      </div>
-      {% endif %}
 
-      {% if sniff_result %}
-      <div class="card">
-        <h2>📡 Tráfico Capturado</h2>
-        <p>IPs vistas: {{ sniff_result.total_ips }}</p>
-        <p>Protocolos: {{ sniff_result.protocolos|join(', ') }}</p>
-        <p>Lista IPs: {{ sniff_result.ips_vistas|join(', ') }}</p>
-      </div>
-      {% endif %}
-
-      {% if ssh_ipa_result %}
-      <div class="card">
-        <h2>🔐 SSH ➔ ip a</h2>
-        {% if not ssh_ipa_result.success %}
-          <pre class="error">{{ ssh_ipa_result.error }}</pre>
-        {% else %}
-          <pre class="raw">{{ ssh_ipa_result.output }}</pre>
+        {% if hydra_result %}
+        <div class="result-section">
+            <h2>🔑 Resultados de Hydra</h2>
+            {% if hydra_result.error %}
+                <div class="error">{{ hydra_result.error }}</div>
+            {% else %}
+                <table class="creds-table">
+                    <tr><th>Host</th><td>{{ hydra_result.host }}</td></tr>
+                    <tr><th>Puerto</th><td>{{ hydra_result.port }}</td></tr>
+                    <tr><th>Usuario</th><td>{{ hydra_result.login }}</td></tr>
+                    <tr><th>Contraseña</th><td>{{ hydra_result.password }}</td></tr>
+                </table>
+                <pre class="raw-output">{{ hydra_result.raw_output }}</pre>
+            {% endif %}
+        </div>
         {% endif %}
-      </div>
-      {% endif %}
-
-    </section>
-  </div>
-
-  <script>
-    const sel = document.getElementById('tipo_ataque');
-    const toggle = (id, show) => document.getElementById(id).classList.toggle('hidden', !show);
-
-    sel.addEventListener('change', () => {
-      const v = sel.value;
-      toggle('puerto-syn',     v==='syn_flood');
-      toggle('duracion-fields', ['syn_flood','sniff'].includes(v));
-      toggle('hydra-fields',    v==='hydra');
-      toggle('sniff-fields',    v==='sniff');
-      toggle('ssh-ipa-fields',  v==='ssh_ip_a');
-    });
-
-    // Al cargar, oculta/mostrar según valor por defecto
-    sel.dispatchEvent(new Event('change'));
-  </script>
+    </div>
 </body>
 </html>

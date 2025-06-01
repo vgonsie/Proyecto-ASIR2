@@ -1,167 +1,152 @@
-/* Hacker-Dark Theme */
+/* static/styles.css */
+
 body {
-  background: #0b0f11;
-  color: #c8f8dc;
-  font-family: 'Consolas','Courier New',monospace;
-  margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #101820;
+    color: #f1f1f1;
+    margin: 0;
+    padding: 0;
 }
-.wrapper {
-  max-width: 900px; margin: 20px auto;
-  padding: 10px;
+
+.container {
+    max-width: 850px;
+    margin: 30px auto;
+    background: #1c1c1c;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
 }
-header {
-  display: flex; justify-content: space-between;
-  align-items: center; border-bottom: 1px solid #155;
-  padding-bottom: 5px; margin-bottom: 15px;
-}
+
 header h1 {
-  font-size: 1.8em; color: #3af;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #00ffff;
 }
-.user-bar a {
-  color: #f55; text-decoration: none;
-  margin-left: 15px;
+
+.user-info {
+    text-align: right;
+    font-size: 13px;
+    color: #ccc;
 }
-.attack-form {
-  background: rgba(20,30,40,0.8);
-  padding: 15px; border-radius: 4px;
-  box-shadow: 0 0 8px rgba(0,255,200,0.3);
+
+form {
+    margin-bottom: 30px;
 }
-.field {
-  margin-bottom: 12px;
-  display: flex; flex-direction: column;
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #00d9ff;
 }
-.field.hidden { display: none; }
-.field label { margin-bottom: 4px; font-size: 0.95em; }
-.field input,
-.field select {
-  padding: 6px; font-size: 1em;
-  background: #112; color: #c8f8dc;
-  border: 1px solid #155; border-radius: 3px;
+
+input[type="text"], input[type="password"], select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #00ffff;
+    border-radius: 4px;
+    background: #111;
+    color: #fff;
 }
-.btn.execute {
-  width: 100%; padding: 10px;
-  background: #3af; color: #022;
-  font-weight: bold; border: none;
-  cursor: pointer; border-radius: 3px;
-  transition: background 0.2s;
+
+button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #00ffff;
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
 }
-.btn.execute:hover { background: #58c; }
-.results {
-  margin-top: 20px;
+
+button:hover {
+    background-color: #00c0c0;
 }
-.card {
-  background: #112; padding: 12px;
-  border: 1px solid #155; border-radius: 4px;
-  margin-bottom: 15px;
+
+.message-box {
+    background-color: #0077cc;
+    color: white;
+    padding: 10px;
+    border-left: 4px solid #00ffff;
+    border-radius: 5px;
+    margin-top: 20px;
 }
-.card h2 {
-  margin-top: 0; color: #3af;
+
+.result-section {
+    background: #222;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 25px;
+    border: 1px solid #00ffff;
 }
+
 table {
-  width: 100%; border-collapse: collapse;
-  margin-top: 8px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: #111;
 }
-table th, table td {
-  padding: 6px; border: 1px solid #155;
+
+th, td {
+    padding: 10px;
+    border: 1px solid #00cccc;
+    text-align: left;
 }
-table th { background: #134; text-align: left; }
-.ports th { width: 20%; }
-.state-open { color: #6f6; font-weight: bold; }
-.state-closed { color: #f66; font-weight: bold; }
-pre.raw, pre.error {
-  background: #022; color: #c8f8dc;
-  padding: 8px; overflow-x: auto;
+
+.state-open {
+    color: #00ff99;
 }
+.state-closed {
+    color: #ff4d4d;
+}
+
 .error {
-  background: #300; color: #f88;
-  padding: 8px; border-left: 3px solid #f55;
-}
-.alert {
-  padding: 8px; border-radius: 3px; margin-bottom: 12px;
-}
-.alert.success {
-  background: #0a0; color: #cec;
-  border-left: 4px solid #3f3;
+    background: #660000;
+    color: #fff;
+    padding: 10px;
+    border-left: 5px solid red;
+    margin-top: 10px;
+    border-radius: 5px;
 }
 
-/* --- Login Hacker Style --- */
-.login-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #0b0f11;
+pre.raw-output {
+    background: #000;
+    color: #0f0;
+    padding: 10px;
+    font-size: 13px;
+    margin-top: 15px;
+    overflow-x: auto;
 }
 
-.login-card {
-  background: rgba(20, 30, 40, 0.95);
-  padding: 30px 40px;
-  border: 1px solid #155;
-  border-radius: 6px;
-  box-shadow: 0 0 15px rgba(0, 255, 200, 0.4);
-  width: 320px;
-  text-align: center;
+.login-container {
+    max-width: 400px;
+    margin: 80px auto;
+    background: #1c1c1c;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    text-align: center;
 }
 
-.login-card h1 {
-  color: #3af;
-  margin-bottom: 20px;
-  font-family: 'Courier New', monospace;
-  font-size: 1.5em;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.login-container h1 {
+    color: #00ffff;
+    margin-bottom: 20px;
 }
 
-.login-form .field {
-  margin-bottom: 15px;
-  text-align: left;
+.login-container form {
+    text-align: left;
 }
 
-.login-form label {
-  font-size: 0.9em;
-  color: #c8f8dc;
-  margin-bottom: 4px;
-  display: block;
-}
-
-.login-form input {
-  width: 100%;
-  padding: 8px;
-  background: #112;
-  color: #c8f8dc;
-  border: 1px solid #155;
-  border-radius: 3px;
-  font-family: 'Courier New', monospace;
-  font-size: 1em;
-}
-
-.login-form input:focus {
-  outline: none;
-  border-color: #3af;
-  box-shadow: 0 0 5px rgba(58, 170, 255, 0.7);
-}
-
-.btn.login-btn {
-  width: 100%;
-  padding: 10px;
-  background: #3af;
-  color: #022;
-  font-weight: bold;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn.login-btn:hover {
-  background: #58c;
-}
-
-.alert.error {
-  background: #300;
-  color: #f88;
-  padding: 8px;
-  margin-bottom: 15px;
-  border-left: 4px solid #f55;
-  font-family: 'Courier New', monospace;
+.login-container select, 
+.login-container input {
+    background: #111;
+    color: #fff;
+    border: 1px solid #00ffff;
+    padding: 8px;
+    margin-bottom: 15px;
+    width: 100%;
+    border-radius: 4px;
 }

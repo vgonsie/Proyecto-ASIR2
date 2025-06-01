@@ -1,60 +1,53 @@
 # app.py
 from flask import Flask, render_template, request, redirect, url_for
-from flask_login import (
-    LoginManager, UserMixin,
-    login_user, login_required,
-    logout_user, current_user
-)
-import subprocess
-import os
-import sqlite3
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+import subprocess, os, sqlite3, threading, random, time, smtplib
 from scapy.all import sniff, IP, TCP, UDP, send, Ether, ARP
 from werkzeug.security import generate_password_hash, check_password_hash
-import threading, random, time
-from datetime import datetime
-import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_aleatoria_segura'
-
-# Ruta a la DB
 DB_PATH = "/var/lib/grafana/resultados.db"
 
-# Configuración Flask-Login
+# ---- LOGIN ----
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
-# --- Usuarios ---
 class User(UserMixin):
-    def __init__(self, id, username, password_hash):
+    def __init__(self, id, username, password_hash, role):
         self.id = id
         self.username = username
         self.password_hash = password_hash
+        self.role = role
 
-# Usuario demo
 users = {
-    1: User(1, 'admin', generate_password_hash('admin'))
+    1: User(1, 'admin', generate_password_hash('admin'), 'admin'),
+    2: User(2, 'user', generate_password_hash('user'), 'user')
 }
 
 @login_manager.user_loader
 def load_user(user_id):
     return users.get(int(user_id))
 
-# --- Funciones de correo ---
+# ---- EMAIL CONFIG ----
 EMAIL_FROM = "avisosataquesproyectoasir@gmail.com"
-EMAIL_PASS = "pe12pe34"
-EMAIL_TO   = "avisosataquesproyectoasir@gmail.com"
+EMAIL_PASS = "hopr tkbe pfse omus"
+EMAIL_TO = "avisosataquesproyectoasir@gmail.com"
 SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT   = 587
+SMTP_PORT = 587
 
-def send_alert(subject, body):
-    """Envía un correo con asunto y cuerpo HTML/text."""
+def send_alert(tipo, ip):
     msg = MIMEMultipart()
     msg['From'] = EMAIL_FROM
-    msg['To']   = EMAIL_TO
-    msg['Subject'] = subject
+    msg['To'] = EMAIL_TO
+    msg['Subject'] = f"[ALERTA] Nuevo ataque iniciado"
+    body = f"""
+    <p>El usuario <strong>{current_user.username}</strong> ha iniciado un ataque <b>{tipo}</b> contra la IP <b>{ip}</b>.</p>
+    <p>Fecha y hora: {datetime.now()}</p>
+    """
     msg.attach(MIMEText(body, 'html'))
     try:
         smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
@@ -65,7 +58,7 @@ def send_alert(subject, body):
     except Exception as e:
         print(f"[ERROR EMAIL] {e}")
 
-# --- Diccionarios ---
+# ---- FUNCIONES COMUNES ----
 def obtener_diccionarios():
     d = "/home/kali/Proyecto-ASIR2/diccionarios"
     try:
@@ -73,18 +66,19 @@ def obtener_diccionarios():
     except:
         return []
 
-# --- Nmap ---
+# ---- NMAP ----
 def run_nmap(ip):
     try:
-        out = subprocess.check_output(["nmap","-sV",ip], stderr=subprocess.STDOUT)
-        res = parse_nmap_output(out.decode())
-        guardar_resultado_nmap(res, ip)
-        return res
+        out = subprocess.check_output(["nmap", "-sV", ip], stderr=subprocess.STDOUT)
+        result = parse_nmap_output(out.decode())
+        guardar_resultado_nmap(result, ip)
+        send_alert("Nmap", ip)
+        return result
     except subprocess.CalledProcessError as e:
         return {"error": e.output.decode(), "raw_output": e.output.decode()}
 
 def parse_nmap_output(output):
-    data = {"host":"","status":"","ports":[],"mac":"","raw_output":output}
+    data = {"host": "", "status": "", "ports": [], "mac": "", "raw_output": output}
     for line in output.splitlines():
         if "Nmap scan report for" in line:
             data["host"] = line.split("for")[1].strip()
@@ -98,7 +92,7 @@ def parse_nmap_output(output):
                 "port": p[0],
                 "state": p[1],
                 "service": p[2],
-                "version": " ".join(p[3:]) if len(p)>3 else ""
+                "version": " ".join(p[3:]) if len(p) > 3 else ""
             })
     return data
 
@@ -108,46 +102,27 @@ def guardar_resultado_nmap(result, ip):
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         for port in result["ports"]:
-            c.execute(
-                "INSERT INTO nmap_resultados(ip, puerto, servicio, version) VALUES(?,?,?,?)",
-                (result["host"], port["port"], port["service"], port["version"])
-            )
-            # ALERTA por correo si encontramos SSH(22) o FTP(21) abierto
-            if port["port"].startswith("22/tcp") or port["port"].startswith("21/tcp"):
-                subj = f"[ALERTA] Puerto {port['port']} abierto en {ip}"
-                body = f"""
-                <p><strong>Nmap detectó puerto abierto:</strong></p>
-                <ul>
-                  <li>Host: {result['host']}</li>
-                  <li>Puerto: {port['port']}</li>
-                  <li>Servicio: {port['service']}</li>
-                  <li>Versión: {port['version']}</li>
-                  <li>Fecha: {datetime.now()}</li>
-                </ul>
-                """
-                send_alert(subj, body)
-        c.execute(
-            "INSERT INTO ataques_realizados(ip, tipo_ataque) VALUES(?,?)",
-            (ip, "nmap")
-        )
-        conn.commit()
-        conn.close()
+            c.execute("INSERT INTO nmap_resultados(ip, puerto, servicio, version) VALUES(?,?,?,?)",
+                      (result["host"], port["port"], port["service"], port["version"]))
+        c.execute("INSERT INTO ataques_realizados(ip, tipo_ataque) VALUES(?,?)", (ip, "nmap"))
+        conn.commit(); conn.close()
     except sqlite3.Error as e:
         print(f"[SQLITE NMAP] {e}")
 
-# --- Hydra ---
+# ---- HYDRA ----
 def run_hydra(ip, dicc, user, proto):
     path = os.path.join("/home/kali/Proyecto-ASIR2/diccionarios", dicc)
     if not os.path.exists(path):
-        return {"error":"Diccionario no existe","raw_output":""}
-    cmd = ["hydra","-l",user,"-P",path,f"{proto}://{ip}","-t","4","-vV"]
+        return {"error": "Diccionario no existe", "raw_output": ""}
+    cmd = ["hydra", "-l", user, "-P", path, f"{proto}://{ip}", "-t", "4", "-vV"]
     try:
         out = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-        res = parse_hydra_output(out.decode())
-        guardar_resultado_hydra(res, ip)
-        return res
+        result = parse_hydra_output(out.decode())
+        guardar_resultado_hydra(result, ip)
+        send_alert("Hydra", ip)
+        return result
     except subprocess.CalledProcessError as e:
-        return {"error":"Hydra falló","raw_output":e.output.decode()}
+        return {"error": "Hydra falló", "raw_output": e.output.decode()}
 
 def parse_hydra_output(output):
     for line in output.splitlines():
@@ -160,81 +135,65 @@ def parse_hydra_output(output):
                 "password": parts[parts.index("password:")+1],
                 "raw_output": output
             }
-    return {"error":"No credenciales","raw_output":output}
+    return {"error": "No credenciales", "raw_output": output}
 
-def guardar_resultado_hydra(res, ip):
-    if res.get("error"): return
+def guardar_resultado_hydra(result, ip):
+    if result.get("error"): return
     try:
-        conn = sqlite3.connect(DB_PATH); c=conn.cursor()
-        c.execute(
-            "INSERT INTO hydra_resultados(ip, puerto, usuario, password, protocolo) VALUES(?,?,?,?,?)",
-            (res["host"], res["port"], res["login"], res["password"], "ssh")
-        )
-        c.execute(
-            "INSERT INTO ataques_realizados(ip, tipo_ataque, puerto) VALUES(?,?,?)",
-            (ip, "hydra", res["port"])
-        )
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("INSERT INTO hydra_resultados(ip, puerto, usuario, password, protocolo) VALUES(?,?,?,?,?)",
+                  (result["host"], result["port"], result["login"], result["password"], "ssh"))
+        c.execute("INSERT INTO ataques_realizados(ip, tipo_ataque, puerto) VALUES(?,?,?)",
+                  (ip, "hydra", result["port"]))
         conn.commit(); conn.close()
-        # Alerta por credenciales válidas
-        subj = f"[ALERTA] Credenciales encontradas en {ip}"
-        body = f"""
-          <p><strong>Hydra obtuvo credenciales válidas:</strong></p>
-          <ul>
-            <li>Host: {res['host']}</li>
-            <li>Puerto: {res['port']}</li>
-            <li>Usuario: {res['login']}</li>
-            <li>Contraseña: {res['password']}</li>
-            <li>Fecha: {datetime.now()}</li>
-          </ul>
-        """
-        send_alert(subj, body)
     except sqlite3.Error as e:
         print(f"[SQLITE HYDRA] {e}")
 
-# --- Rutas Flask ---
-@app.route('/login', methods=['GET','POST'])
+# ---- FLASK ROUTES ----
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method=='POST':
-        u=request.form['username']; p=request.form['password']
-        user = next((x for x in users.values() if x.username==u),None)
-        if user and check_password_hash(user.password_hash,p):
-            login_user(user); return redirect(url_for('index'))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = next((u for u in users.values() if u.username == username), None)
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            return redirect(url_for('index'))
         return render_template('login.html', error='Credenciales inválidas')
     return render_template('login.html')
 
 @app.route('/logout')
 @login_required
 def logout():
-    logout_user(); return redirect(url_for('login'))
+    logout_user()
+    return redirect(url_for('login'))
 
-@app.route('/', methods=['GET','POST'])
+@app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    result=None; hydra_result=None; message=None
-    if request.method=='POST':
-        ip = request.form['ip']
-        tipo = request.form['tipo_ataque']
-        if tipo=='nmap':
+    result = None
+    hydra_result = None
+    message = None
+    if request.method == "POST":
+        ip = request.form["ip"]
+        tipo = request.form["tipo_ataque"]
+        if tipo == "nmap":
             result = run_nmap(ip)
-        elif tipo=='hydra':
-            hydra_result = run_hydra(
-                ip,
-                request.form['diccionario'],
-                request.form['usuario'] or 'debian',
-                request.form['protocolo']
-            )
+        elif tipo == "hydra" and current_user.role == "admin":
+            dicc = request.form["diccionario"]
+            usuario = request.form["usuario"]
+            proto = request.form["protocolo"]
+            hydra_result = run_hydra(ip, dicc, usuario, proto)
+
     return render_template(
-        'index.html',
+        "index.html",
         username=current_user.username,
+        role=current_user.role,
         result=result,
         hydra_result=hydra_result,
         diccionarios=obtener_diccionarios(),
-        interfaz_list=[],
-        interfaz_predicha=None,
-        sniff_result=None,
-        ssh_ipa_result=None,
-        message=message
     )
 
-if __name__=='__main__':
+if __name__ == "__main__":
     app.run(debug=True)
