@@ -1257,6 +1257,10 @@ Modificación de los archivos ![app.py](flask-app/app.py) e ![index.html](flask-
 
 ---
 
+He puesto las alertas por correo, indicando qué usuario inicia el ataque, qué tipo de ataque y a qué IP se ejecuta, también he creado un nuevo usuario llamado "user" que NO puede ejecutar todos los ataques y he creado un botón que te redirige a otra página que muestra las gráficas de grafana embebidas (en proceso).
+
+---
+
 ### INSTALAR WAZUH
 
 Error al instalar docker, así que he tenido que borrar la caché
