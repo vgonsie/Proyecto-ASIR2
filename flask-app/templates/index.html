@@ -2,105 +2,123 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Panel de Ataques</title>
+    <title>Herramienta de Pentesting</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🔧 Herramienta de Pentesting</h1>
-            <div class="user-info">
-                Usuario: <strong>{{ username }}</strong> |
-                <a href="{{ url_for('logout') }}">Cerrar sesión</a>
-            </div>
-        </header>
+<div class="container">
+    <header>
+        <h1>Simulación de Ataques</h1>
+        <div class="user-info">
+            <span>Usuario: {{ username }} ({{ role }})</span>
+            <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
+        </div>
+    </header>
 
-        {% if message %}
-            <div class="message-box">{{ message }}</div>
-        {% endif %}
+    {% if message %}
+    <div class="message-box">{{ message }}</div>
+    {% endif %}
 
-        <form method="POST">
-            <label for="ip">IP de destino:</label>
-            <input type="text" name="ip" required placeholder="192.168.1.100">
+    <form method="POST">
+        <label for="ip">IP de destino:</label>
+        <input type="text" id="ip" name="ip" placeholder="192.168.1.1" required>
 
-            <label for="tipo_ataque">Tipo de ataque:</label>
-            <select name="tipo_ataque" required>
+        <label for="tipo_ataque">Tipo de ataque:</label>
+        <select name="tipo_ataque" id="tipo_ataque" required>
+            {% if role == 'admin' %}
                 <option value="nmap">Escaneo Nmap (-sV)</option>
-                {% if role == 'admin' %}
-                    <option value="hydra">Ataque Hydra</option>
-                {% endif %}
+                <option value="hydra">Ataque Hydra</option>
+                <option value="syn_flood">DoS SYN Flood</option>
+                <option value="sniff">Sniffing Pasivo</option>
+                <option value="ssh_ip_a">SSH + 'ip a'</option>
+            {% else %}
+                <option value="nmap">Escaneo Nmap (-sV)</option>
+                <option value="ssh_ip_a">SSH + 'ip a'</option>
+            {% endif %}
+        </select>
+
+        <!-- Campos específicos de Hydra -->
+        <div id="hydra-fields" style="display:none;">
+            <label for="diccionario">Diccionario:</label>
+            <select name="diccionario" required>
+                {% for d in diccionarios %}
+                <option value="{{ d }}">{{ d }}</option>
+                {% endfor %}
             </select>
 
-            {% if role == 'admin' %}
-            <div id="hydra-fields">
-                <label for="diccionario">Diccionario:</label>
-                <select name="diccionario">
-                    {% for d in diccionarios %}
-                        <option value="{{ d }}">{{ d }}</option>
-                    {% endfor %}
-                </select>
-                <label for="usuario">Usuario:</label>
-                <input type="text" name="usuario" value="debian" required>
-                <label for="protocolo">Protocolo:</label>
-                <select name="protocolo">
-                    <option value="ssh">SSH</option>
-                    <option value="ftp">FTP</option>
-                    <option value="http">HTTP</option>
-                </select>
-            </div>
-            {% endif %}
+            <label for="usuario">Usuario:</label>
+            <input type="text" name="usuario" value="debian" required>
 
-            <button type="submit">Ejecutar</button>
-        </form>
-
-        {% if result %}
-        <div class="result-section">
-            <h2>🔍 Resultados de Nmap</h2>
-            {% if result.error %}
-                <div class="error">{{ result.error }}</div>
-            {% else %}
-                <table class="info-table">
-                    <tr><th>Host</th><td>{{ result.host }}</td></tr>
-                    <tr><th>Estado</th><td>{{ result.status }}</td></tr>
-                    {% if result.mac %}<tr><th>MAC</th><td>{{ result.mac }}</td></tr>{% endif %}
-                </table>
-                {% if result.ports %}
-                    <h3>Puertos detectados:</h3>
-                    <table class="ports-table">
-                        <tr><th>Puerto</th><th>Estado</th><th>Servicio</th><th>Versión</th></tr>
-                        {% for p in result.ports %}
-                        <tr>
-                            <td>{{ p.port }}</td>
-                            <td class="state-{{ p.state }}">{{ p.state }}</td>
-                            <td>{{ p.service }}</td>
-                            <td>{{ p.version }}</td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <p>No se encontraron puertos abiertos.</p>
-                {% endif %}
-                <pre class="raw-output">{{ result.raw_output }}</pre>
-            {% endif %}
+            <label for="protocolo">Protocolo:</label>
+            <select name="protocolo" required>
+                <option value="ssh">SSH</option>
+                <option value="ftp">FTP</option>
+                <option value="http">HTTP</option>
+            </select>
         </div>
+
+        <button type="submit" class="login-btn">Ejecutar Ataque</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('dashboards') }}" class="dashboard-btn">📊 Ver Dashboards</a>
+
+    {% if result %}
+    <div class="result-section">
+        <h2>🔍 Resultado de Nmap</h2>
+        {% if result.error %}
+        <div class="error">{{ result.error }}</div>
+        {% else %}
+        <p><strong>Host:</strong> {{ result.host }}</p>
+        <p><strong>Estado:</strong> {{ result.status }}</p>
+        {% if result.mac %}<p><strong>MAC:</strong> {{ result.mac }}</p>{% endif %}
+        {% if result.ports %}
+        <table class="ports-table">
+            <tr>
+                <th>Puerto</th><th>Estado</th><th>Servicio</th><th>Versión</th>
+            </tr>
+            {% for port in result.ports %}
+            <tr>
+                <td>{{ port.port }}</td>
+                <td class="state-{{ port.state }}">{{ port.state }}</td>
+                <td>{{ port.service }}</td>
+                <td>{{ port.version }}</td>
+            </tr>
+            {% endfor %}
+        </table>
         {% endif %}
-
-        {% if hydra_result %}
-        <div class="result-section">
-            <h2>🔑 Resultados de Hydra</h2>
-            {% if hydra_result.error %}
-                <div class="error">{{ hydra_result.error }}</div>
-            {% else %}
-                <table class="creds-table">
-                    <tr><th>Host</th><td>{{ hydra_result.host }}</td></tr>
-                    <tr><th>Puerto</th><td>{{ hydra_result.port }}</td></tr>
-                    <tr><th>Usuario</th><td>{{ hydra_result.login }}</td></tr>
-                    <tr><th>Contraseña</th><td>{{ hydra_result.password }}</td></tr>
-                </table>
-                <pre class="raw-output">{{ hydra_result.raw_output }}</pre>
-            {% endif %}
-        </div>
+        <pre class="raw-output">{{ result.raw_output }}</pre>
         {% endif %}
     </div>
+    {% endif %}
+
+    {% if hydra_result %}
+    <div class="result-section">
+        <h2>🔑 Resultado de Hydra</h2>
+        {% if hydra_result.error %}
+        <div class="error">{{ hydra_result.error }}</div>
+        {% else %}
+        <p><strong>Host:</strong> {{ hydra_result.host }}</p>
+        <p><strong>Puerto:</strong> {{ hydra_result.port }}</p>
+        <p><strong>Usuario:</strong> {{ hydra_result.login }}</p>
+        <p><strong>Contraseña:</strong> {{ hydra_result.password }}</p>
+        <pre class="raw-output">{{ hydra_result.raw_output }}</pre>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    const tipoAtaque = document.getElementById("tipo_ataque");
+    const hydraFields = document.getElementById("hydra-fields");
+
+    tipoAtaque.addEventListener("change", () => {
+        hydraFields.style.display = tipoAtaque.value === "hydra" ? "block" : "none";
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        hydraFields.style.display = tipoAtaque.value === "hydra" ? "block" : "none";
+    });
+</script>
 </body>
 </html>

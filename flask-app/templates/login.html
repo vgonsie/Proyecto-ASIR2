@@ -2,23 +2,33 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Proyecto ASIR2</title>
+    <title>Login - Herramienta Pentesting</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="login-container">
-        <h1>🔐 Inicio de sesión</h1>
-        <form method="POST">
-            {% if error %}<div class="error">{{ error }}</div>{% endif %}
-            <label for="username">Usuario:</label>
-            <select id="username" name="username" required>
+<div class="container login-container">
+    <h1 class="title">🔐 Acceso al Sistema</h1>
+    
+    <form method="POST" class="login-form">
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <div class="form-section">
+            <label for="username">Selecciona usuario:</label>
+            <select name="username" id="username" required>
                 <option value="admin">admin</option>
                 <option value="user">user</option>
             </select>
+        </div>
+
+        <div class="form-section">
             <label for="password">Contraseña:</label>
             <input type="password" name="password" required>
-            <button type="submit">Entrar</button>
-        </form>
-    </div>
+        </div>
+
+        <button type="submit" class="login-btn">Ingresar</button>
+    </form>
+</div>
 </body>
 </html>

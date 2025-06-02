@@ -43,7 +43,7 @@ def send_alert(tipo, ip):
     msg = MIMEMultipart()
     msg['From'] = EMAIL_FROM
     msg['To'] = EMAIL_TO
-    msg['Subject'] = f"[ALERTA] Nuevo ataque iniciado"
+    msg['Subject'] = f"[ALERTA] Ataque iniciado"
     body = f"""
     <p>El usuario <strong>{current_user.username}</strong> ha iniciado un ataque <b>{tipo}</b> contra la IP <b>{ip}</b>.</p>
     <p>Fecha y hora: {datetime.now()}</p>
@@ -192,8 +192,22 @@ def index():
         role=current_user.role,
         result=result,
         hydra_result=hydra_result,
-        diccionarios=obtener_diccionarios(),
+        diccionarios=obtener_diccionarios()
     )
+
+@app.route("/dashboards")
+@login_required
+def dashboards():
+    return render_template("grafana.html")
+
+@app.route("/grafana_proxy/<dashboard>")
+@login_required
+def grafana_proxy(dashboard):
+    if dashboard == "hydra":
+        return redirect("http://localhost:3000/d/hydra/hydra-dashboard?orgId=1")
+    elif dashboard == "nmap":
+        return redirect("http://localhost:3000/d/nmap/nmap-dashboard?orgId=1")
+    return "Dashboard no encontrado", 404
 
 if __name__ == "__main__":
     app.run(debug=True)
