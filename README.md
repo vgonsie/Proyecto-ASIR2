@@ -1263,6 +1263,36 @@ He puesto las alertas por correo, indicando qué usuario inicia el ataque, qué 
 
 He hecho que salte un error si usuario "user" intenta ejecutar un ataque no permitido, y avise por correo con una alerta.
 
+También he solucionado el error de grafana con las gráficas embebidas que no se mostraban:
+
+```bash
+sudo nano /etc/grafana/grafana.ini
+```
+
+```bash
+allow_embedding = true
+cookie_samesite = none
+```
+
+```bash
+[auth.anonymous]
+# enable anonymous access
+enabled = true
+
+# specify organization name that should be used for unauthenticated users
+org_name = Main Org.
+
+# specify role for unauthenticated users
+org_role = Viewer
+
+# mask the Grafana version number for unauthenticated users
+hide_version = false
+```
+
+```bash
+sudo systemctl restart grafana-server
+```
+
 ---
 ### INSTALAR WAZUH
 
