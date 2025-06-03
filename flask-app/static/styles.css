@@ -1,164 +1,208 @@
-/* styles.css - Estilo profesional con azul eléctrico */
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #111827;
-    color: #f3f4f6;
+/* --- Global Reset --- */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-.container {
-    width: 90%;
-    max-width: 800px;
-    margin: 40px auto;
-    background-color: #1f2937;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 153, 255, 0.2);
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0e1621;
+    color: #ffffff;
+    line-height: 1.6;
+    padding: 20px;
 }
 
+/* --- Header --- */
 header {
+    background-color: #121f2e;
+    padding: 20px;
+    border-bottom: 2px solid #007bff;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 header h1 {
-    font-size: 28px;
-    color: #0ea5e9;
-    margin-bottom: 20px;
+    font-size: 24px;
+    color: #00bfff;
 }
 
 .user-info {
     font-size: 14px;
-    color: #e5e7eb;
+    color: #cccccc;
 }
 
-label {
-    display: block;
-    margin-top: 15px;
-    font-weight: bold;
-    color: #93c5fd;
-}
-
-input[type="text"],
-input[type="password"],
-input[type="number"],
-select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 6px;
-    border: 1px solid #4b5563;
-    border-radius: 6px;
-    background-color: #111827;
-    color: #f3f4f6;
-    transition: 0.3s;
-}
-
-input:focus, select:focus {
-    border-color: #0ea5e9;
-    outline: none;
-}
-
-button.login-btn,
-.toggle-btn,
-button {
-    margin-top: 20px;
-    padding: 12px;
-    background-color: #0ea5e9;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-    width: 100%;
-}
-
-button:hover {
-    background-color: #0284c7;
-}
-
-.message-box,
-.success {
-    background-color: #1e40af;
-    color: #dbeafe;
-    padding: 12px;
-    border-left: 5px solid #3b82f6;
-    border-radius: 6px;
-    margin-bottom: 20px;
-}
-
-.error {
-    background-color: #7f1d1d;
-    color: #fee2e2;
-    padding: 12px;
-    border-left: 5px solid #dc2626;
-    border-radius: 6px;
-    margin-bottom: 20px;
-}
-
-.result-section {
-    margin-top: 30px;
-    padding: 20px;
-    background-color: #111827;
-    border: 1px solid #374151;
-    border-radius: 8px;
-}
-
-.ports-table,
-.creds-table,
-.info-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-.ports-table th,
-.ports-table td,
-.creds-table th,
-.creds-table td,
-.info-table th,
-.info-table td {
-    padding: 10px;
-    border: 1px solid #374151;
-    color: #e5e7eb;
-}
-
-.state-open {
-    color: #22c55e;
-}
-.state-closed {
-    color: #ef4444;
-}
-
-.raw-output {
-    background-color: #000000;
-    color: #0ea5e9;
-    padding: 10px;
-    font-family: monospace;
-    font-size: 13px;
-    border-radius: 4px;
-    overflow-x: auto;
-    margin-top: 15px;
-}
-
-.back-btn {
-    color: #0ea5e9;
+.user-info a {
+    color: #00bfff;
     text-decoration: none;
-    font-weight: bold;
+    margin-left: 10px;
 }
 
-.back-btn:hover {
+.user-info a:hover {
     text-decoration: underline;
 }
 
-h2, h3 {
-    color: #3b82f6;
+/* --- Login --- */
+.login-body {
+    background-color: #0e1621;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-pre {
-    white-space: pre-wrap;
+.login-container {
+    background-color: #182737;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+    width: 300px;
+}
+
+.login-container h2 {
+    color: #00bfff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.login-container label {
+    display: block;
+    margin-top: 10px;
+}
+
+.login-container input,
+.login-container select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #1f2d3a;
+    color: white;
+}
+
+.login-container button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #00bfff;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #0099cc;
+}
+
+.error {
+    background-color: #ff4d4d;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+}
+
+/* --- Main Form --- */
+main {
+    max-width: 900px;
+    margin: 30px auto;
+    background-color: #1a2738;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+}
+
+form.attack-form label {
+    display: block;
+    margin-top: 15px;
+    color: #00bfff;
+    font-weight: bold;
+}
+
+form.attack-form input,
+form.attack-form select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #1f2d3a;
+    color: #fff;
+}
+
+form.attack-form button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #00bfff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+form.attack-form button:hover {
+    background-color: #0077cc;
+}
+
+.conditional-options {
+    display: none;
+}
+
+/* --- Output Section --- */
+.output-box {
+    background-color: #111d2b;
+    border: 1px solid #00bfff;
+    padding: 20px;
+    margin-top: 25px;
+    border-radius: 6px;
+}
+
+.output-box h3 {
+    color: #00bfff;
+    margin-bottom: 10px;
+}
+
+.output-box pre {
+    background-color: #0e1621;
+    padding: 10px;
+    color: #00ffcc;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+/* --- Messages --- */
+.message {
+    background-color: #1e6b9d;
+    color: #fff;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* --- Dashboards Link --- */
+footer {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.dashboards-btn {
+    background-color: #0077cc;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.dashboards-btn:hover {
+    background-color: #005fa3;
 }

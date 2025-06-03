@@ -1,4 +1,3 @@
-<!-- templates/grafana.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,33 +6,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <div class="container">
+    <main>
         <header>
-            <h1>📊 Dashboards de Grafana</h1>
-            <a href="{{ url_for('index') }}" class="back-btn">← Volver</a>
+            <h1>📊 Dashboards de Análisis</h1>
+            <div class="user-info">
+                <span>Usuario: {{ username }}</span>
+                <a href="{{ url_for('index') }}">← Volver</a>
+            </div>
         </header>
 
-        <div class="dashboard-grid">
-            <div class="dashboard-container">
-                <h3>🔓 Resultados Hydra</h3>
-                <iframe 
-                    src="{{ url_for('grafana_proxy', dashboard='hydra') }}"
-                    width="100%" 
-                    height="500"
-                    frameborder="0">
-                </iframe>
-            </div>
-
-            <div class="dashboard-container">
-                <h3>🛡️ Escaneos Nmap</h3>
-                <iframe 
-                    src="{{ url_for('grafana_proxy', dashboard='nmap') }}"
-                    width="100%"
-                    height="500"
-                    frameborder="0">
-                </iframe>
-            </div>
+        <div class="output-box">
+            <h3>🛡️ Tipos de Ataque Detectados</h3>
+            <iframe 
+                src="http://localhost:3000/d-solo/0f14bba5-c624-42b2-8af5-642b5a8850ee/tipos-de-ataque?orgId=1&from=now-1h&to=now&timezone=browser&panelId=1&__feature.dashboardSceneSolo" 
+                width="100%" 
+                height="250" 
+                frameborder="0">
+            </iframe>
         </div>
-    </div>
+
+        <div class="output-box">
+            <h3>🔍 Puertos Detectados por Nmap</h3>
+            <iframe 
+                src="http://localhost:3000/d-solo/481e3157-bac5-469b-a793-56ea940848cb/puertos-detectados-por-nmap?orgId=1&from=now-1h&to=now&timezone=browser&panelId=1&__feature.dashboardSceneSolo" 
+                width="100%" 
+                height="250" 
+                frameborder="0">
+            </iframe>
+        </div>
+    </main>
 </body>
 </html>

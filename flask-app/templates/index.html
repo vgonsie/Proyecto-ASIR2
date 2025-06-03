@@ -2,123 +2,141 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Herramienta de Pentesting</title>
+    <title>Panel de Ataques - Proyecto ASIR2</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-<div class="container">
     <header>
-        <h1>Simulación de Ataques</h1>
-        <div class="user-info">
-            <span>Usuario: {{ username }} ({{ role }})</span>
-            <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar sesión</a>
-        </div>
+        <h1>🔒 Panel de Simulación de Ataques</h1>
+        <div class="user-info">Sesión: {{ username }} | <a href="{{ url_for('logout') }}">Salir</a></div>
     </header>
 
-    {% if message %}
-    <div class="message-box">{{ message }}</div>
-    {% endif %}
+    <main>
+        <form method="POST" class="attack-form">
+            <label>IP Objetivo:</label>
+            <input type="text" name="ip" required>
 
-    <form method="POST">
-        <label for="ip">IP de destino:</label>
-        <input type="text" id="ip" name="ip" placeholder="192.168.1.1" required>
-
-        <label for="tipo_ataque">Tipo de ataque:</label>
-        <select name="tipo_ataque" id="tipo_ataque" required>
-            {% if role == 'admin' %}
-                <option value="nmap">Escaneo Nmap (-sV)</option>
-                <option value="hydra">Ataque Hydra</option>
-                <option value="syn_flood">DoS SYN Flood</option>
-                <option value="sniff">Sniffing Pasivo</option>
-                <option value="ssh_ip_a">SSH + 'ip a'</option>
-            {% else %}
-                <option value="nmap">Escaneo Nmap (-sV)</option>
-                <option value="ssh_ip_a">SSH + 'ip a'</option>
-            {% endif %}
-        </select>
-
-        <!-- Campos específicos de Hydra -->
-        <div id="hydra-fields" style="display:none;">
-            <label for="diccionario">Diccionario:</label>
-            <select name="diccionario" required>
-                {% for d in diccionarios %}
-                <option value="{{ d }}">{{ d }}</option>
-                {% endfor %}
+            <label>Tipo de ataque:</label>
+            <select name="tipo_ataque" required id="tipo_ataque_select">
+                <option value="nmap">Escaneo Nmap</option>
+                <option value="hydra">Fuerza Bruta (Hydra)</option>
+                <option value="syn_flood">SYN Flood</option>
+                <option value="sniff">Sniffing de Red</option>
+                <option value="ssh_scan">Escaneo interfaz de red (SSH)</option>
             </select>
 
-            <label for="usuario">Usuario:</label>
-            <input type="text" name="usuario" value="debian" required>
+            <div id="hydra-options" class="conditional-options" style="display:none;">
+                <label>Usuario:</label>
+                <input type="text" name="usuario" value="debian">
+                <label>Protocolo:</label>
+                <select name="protocolo">
+                    <option value="ssh">SSH</option>
+                    <option value="ftp">FTP</option>
+                </select>
+                <label>Diccionario:</label>
+                <select name="diccionario">
+                    {% for dic in diccionarios %}
+                        <option value="{{ dic }}">{{ dic }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-            <label for="protocolo">Protocolo:</label>
-            <select name="protocolo" required>
-                <option value="ssh">SSH</option>
-                <option value="ftp">FTP</option>
-                <option value="http">HTTP</option>
-            </select>
-        </div>
+            <div id="flood-options" class="conditional-options" style="display:none;">
+                <label>Puerto:</label>
+                <input type="number" name="puerto" value="80">
+                <label>Duración (s):</label>
+                <input type="number" name="duracion" value="10">
+            </div>
 
-        <button type="submit" class="login-btn">Ejecutar Ataque</button>
-    </form>
+            <div id="sniff-options" class="conditional-options" style="display:none;">
+                <label>Interfaz:</label>
+                <input type="text" name="interfaz" value="eth0">
+                <label>Duración (s):</label>
+                <input type="number" name="duracion" value="10">
+            </div>
 
-    <br>
-    <a href="{{ url_for('dashboards') }}" class="dashboard-btn">📊 Ver Dashboards</a>
+            <div id="ssh-options" class="conditional-options" style="display:none;">
+                <label>Usuario SSH:</label>
+                <input type="text" name="ssh_user" value="kali">
+                <label>Contraseña SSH:</label>
+                <input type="password" name="ssh_pass">
+            </div>
 
-    {% if result %}
-    <div class="result-section">
-        <h2>🔍 Resultado de Nmap</h2>
-        {% if result.error %}
-        <div class="error">{{ result.error }}</div>
-        {% else %}
-        <p><strong>Host:</strong> {{ result.host }}</p>
-        <p><strong>Estado:</strong> {{ result.status }}</p>
-        {% if result.mac %}<p><strong>MAC:</strong> {{ result.mac }}</p>{% endif %}
-        {% if result.ports %}
-        <table class="ports-table">
-            <tr>
-                <th>Puerto</th><th>Estado</th><th>Servicio</th><th>Versión</th>
-            </tr>
-            {% for port in result.ports %}
-            <tr>
-                <td>{{ port.port }}</td>
-                <td class="state-{{ port.state }}">{{ port.state }}</td>
-                <td>{{ port.service }}</td>
-                <td>{{ port.version }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+            <button type="submit">Ejecutar Ataque</button>
+        </form>
+
+        {% if message %}
+            <div class="message">{{ message }}</div>
         {% endif %}
-        <pre class="raw-output">{{ result.raw_output }}</pre>
+
+        {% if result %}
+            <div class="output-box">
+                <h3>Resultados de Nmap</h3>
+                <pre>
+Host: {{ result.host }}
+Estado: {{ result.status }}
+MAC: {{ result.mac }}
+
+{% for p in result.ports %}
+- {{ p.port }} | {{ p.service }} | {{ p.version }}
+{% endfor %}
+                </pre>
+            </div>
         {% endif %}
-    </div>
-    {% endif %}
 
-    {% if hydra_result %}
-    <div class="result-section">
-        <h2>🔑 Resultado de Hydra</h2>
-        {% if hydra_result.error %}
-        <div class="error">{{ hydra_result.error }}</div>
-        {% else %}
-        <p><strong>Host:</strong> {{ hydra_result.host }}</p>
-        <p><strong>Puerto:</strong> {{ hydra_result.port }}</p>
-        <p><strong>Usuario:</strong> {{ hydra_result.login }}</p>
-        <p><strong>Contraseña:</strong> {{ hydra_result.password }}</p>
-        <pre class="raw-output">{{ hydra_result.raw_output }}</pre>
+        {% if hydra_result %}
+            <div class="output-box">
+                <h3>Resultados de Hydra</h3>
+                {% if hydra_result.error %}
+                    <pre>{{ hydra_result.error }}</pre>
+                {% else %}
+                    <pre>
+Host: {{ hydra_result.host }}
+Puerto: {{ hydra_result.port }}
+Usuario: {{ hydra_result.login }}
+Contraseña: {{ hydra_result.password }}
+                    </pre>
+                {% endif %}
+            </div>
         {% endif %}
-    </div>
-    {% endif %}
-</div>
 
-<script>
-    const tipoAtaque = document.getElementById("tipo_ataque");
-    const hydraFields = document.getElementById("hydra-fields");
+        {% if ssh_result %}
+            <div class="output-box">
+                <h3>Resultado del Escaneo de Interfaz</h3>
+                <pre>{{ ssh_result }}</pre>
+            </div>
+        {% endif %}
+    </main>
 
-    tipoAtaque.addEventListener("change", () => {
-        hydraFields.style.display = tipoAtaque.value === "hydra" ? "block" : "none";
-    });
+    <footer>
+        <a href="{{ url_for('dashboards') }}" class="dashboards-btn">📊 Ver Dashboards</a>
+    </footer>
 
-    document.addEventListener("DOMContentLoaded", () => {
-        hydraFields.style.display = tipoAtaque.value === "hydra" ? "block" : "none";
-    });
-</script>
+    <script>
+        const tipoSelect = document.getElementById('tipo_ataque_select');
+
+        const options = {
+            hydra: document.getElementById('hydra-options'),
+            syn_flood: document.getElementById('flood-options'),
+            sniff: document.getElementById('sniff-options'),
+            ssh_scan: document.getElementById('ssh-options')
+        };
+
+        function updateForm() {
+            // Ocultar todas las opciones condicionales
+            for (const key in options) {
+                options[key].style.display = 'none';
+            }
+
+            let selected = tipoSelect.value;
+
+            if (options[selected]) {
+                options[selected].style.display = 'block';
+            }
+        }
+
+        updateForm();
+        tipoSelect.addEventListener('change', updateForm);
+    </script>
 </body>
 </html>
