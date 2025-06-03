@@ -1261,6 +1261,9 @@ He puesto las alertas por correo, indicando qué usuario inicia el ataque, qué 
 
 ---
 
+He hecho que salte un error si usuario "user" intenta ejecutar un ataque no permitido, y avise por correo con una alerta.
+
+---
 ### INSTALAR WAZUH
 
 Error al instalar docker, así que he tenido que borrar la caché
