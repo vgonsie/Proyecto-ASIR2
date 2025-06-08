@@ -1298,3 +1298,9 @@ sudo systemctl restart grafana-server
 He hecho un botón para descargar un CSV con las contraseñas de los resultados de Hydra, lo he hecho sólo accesible para el administrador, si un usuario sin permisos intenta descargarlo, le redirige a una página de error 403.
 
 ![btn](capturas/pass-btn.png) ![error](capturas/error-403.png)
+
+---
+
+## GRAFANA
+
+He añadido una tercera tabla con el historial de IPs atacadas en ![grafana](flask-app/templates/grafana.html)
