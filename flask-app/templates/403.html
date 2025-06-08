@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>403 - Acceso Denegado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            background-color: #0e1621;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            background-color: #1a2738;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+            max-width: 450px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 72px;
+            margin-bottom: 10px;
+            color: #00bfff;
+        }
+        p {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #cccccc;
+        }
+        a {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #007ACC;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        a:hover {
+            background-color: #005fa3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>403</h1>
+        <p>Acceso Denegado: No tienes permiso para acceder a esta página.</p>
+        <a href="{{ url_for('index') }}">← Volver al panel principal</a>
+    </div>
+</body>
+</html>

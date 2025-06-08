@@ -57,7 +57,7 @@ header h1 {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
-    width: 300px;
+    width: 400px;
 }
 
 .login-container h2 {
@@ -205,4 +205,94 @@ footer {
 
 .dashboards-btn:hover {
     background-color: #005fa3;
+}
+
+.main-panel {
+    background-color: #1a2738;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+    margin-bottom: 30px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #00bfff;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.panel-header h1 {
+    color: #00bfff;
+    font-size: 22px;
+}
+
+.panel-header .user-info {
+    font-size: 14px;
+    color: #cccccc;
+}
+
+.btn-logout {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #00bfff;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-left: 10px;
+}
+
+.btn-logout:hover {
+    background-color: #0077cc;
+}
+
+.btn-logout {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #00bfff;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-left: 10px;
+}
+
+.btn-logout:hover {
+    background-color: #0077cc;
+}
+
+.btn-download {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007ACC;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn-download:hover {
+    background-color: #005fa3;
+}
+
+.btn-logout {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #00bfff;
+    color: #fff !important;  /* fuerza color blanco */
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-left: 10px;
 }

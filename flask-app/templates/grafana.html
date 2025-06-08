@@ -10,7 +10,7 @@
         <header>
             <h1>📊 Dashboards de Análisis</h1>
             <div class="user-info">
-                <span>Usuario: {{ username }}</span>
+                <span>Sesión: <strong>{{ username }}</strong></span>
                 <a href="{{ url_for('index') }}">← Volver</a>
             </div>
         </header>
@@ -33,6 +33,12 @@
                 height="250" 
                 frameborder="0">
             </iframe>
+        </div>
+
+        <div style="text-align:center;">
+            <a href="{{ url_for('download_passwords') }}" class="btn-download">
+                📥 Descargar Contraseñas (solo admin)
+            </a>
         </div>
     </main>
 </body>

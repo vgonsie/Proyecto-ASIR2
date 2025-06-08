@@ -6,21 +6,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body class="login-body">
-    <div class="login-container">
-        <h2>Inicio de sesión</h2>
-        {% if error %}
-            <div class="error">{{ error }}</div>
-        {% endif %}
-        <form method="POST">
-            <label for="username">Usuario:</label>
-            <select name="username" id="username">
-                <option value="admin">admin</option>
-                <option value="user">user</option>
-            </select>
-            <label for="password">Contraseña:</label>
-            <input type="password" name="password" required>
-            <button type="submit">Entrar</button>
-        </form>
-    </div>
+    <main>
+        <div class="login-container">
+            <h2>🔐 Inicio de sesión</h2>
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+            <form method="POST">
+                <label for="username">Usuario:</label>
+                <select name="username" id="username">
+                    <option value="admin">admin</option>
+                    <option value="user">user</option>
+                </select>
+
+                <label for="password">Contraseña:</label>
+                <input type="password" name="password" required>
+
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+    </main>
 </body>
 </html>

@@ -7,6 +7,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 import paramiko
+from flask import send_file, abort
+import io
+import csv
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_aleatoria_segura'
@@ -289,14 +292,56 @@ def index():
                            ssh_result=ssh_result,
                            diccionarios=diccionarios,
                            message=message,
-                           role=current_user.role)
+                           role=current_user.role,
+			   username=current_user.username)
 
 # NUEVA RUTA PARA DASHBOARDS
 @app.route('/dashboards')
 @login_required
 def dashboards():
     # Aquí puedes cambiar la plantilla o poner contenido que necesites
-    return render_template('grafana.html')
+    return render_template('grafana.html', username=current_user.username)
+
+# Botón descargar passwords
+from flask import send_file, abort
+import io
+import csv
+
+@app.route('/download_passwords')
+@login_required
+def download_passwords():
+    if current_user.role != 'admin':
+        abort(403)  # Prohibido para usuarios que no sean admin
+
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("SELECT ip, puerto, usuario, password, protocolo FROM hydra_resultados")
+        rows = c.fetchall()
+        conn.close()
+
+        output = io.StringIO()
+        writer = csv.writer(output)
+        writer.writerow(['IP', 'Puerto', 'Usuario', 'Contraseña', 'Protocolo'])
+        writer.writerows(rows)
+        output.seek(0)
+
+        return send_file(
+            io.BytesIO(output.getvalue().encode('utf-8')),
+            mimetype='text/csv',
+            as_attachment=True,
+            download_name='contraseñas_hydra.csv'
+        )
+    except Exception as e:
+        return f"Error al generar archivo: {e}", 500
+
+# Página error 403
+from flask import abort
+
+@app.errorhandler(403)
+def forbidden(e):
+    return render_template('403.html'), 403
+
 
 if __name__ == "__main__":
     app.run(debug=True)

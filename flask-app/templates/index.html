@@ -8,7 +8,10 @@
 <body>
     <header>
         <h1>🔒 Panel de Simulación de Ataques</h1>
-        <div class="user-info">Sesión: {{ username }} | <a href="{{ url_for('logout') }}">Salir</a></div>
+        <div class="user-info">
+            Sesión: <strong>{{ username }}</strong> |
+            <a href="{{ url_for('logout') }}" class="btn-logout">⏻ Salir</a>
+        </div>
     </header>
 
     <main>
@@ -22,7 +25,7 @@
                 <option value="hydra">Fuerza Bruta (Hydra)</option>
                 <option value="syn_flood">SYN Flood</option>
                 <option value="sniff">Sniffing de Red</option>
-                <option value="ssh_scan">Escaneo interfaz de red (SSH)</option>
+                <option value="ssh_ip">Escaneo interfaz de red (SSH)</option>
             </select>
 
             <div id="hydra-options" class="conditional-options" style="display:none;">
@@ -57,12 +60,12 @@
 
             <div id="ssh-options" class="conditional-options" style="display:none;">
                 <label>Usuario SSH:</label>
-                <input type="text" name="ssh_user" value="kali">
+                <input type="text" name="ssh_user" value="debian">
                 <label>Contraseña SSH:</label>
                 <input type="password" name="ssh_pass">
             </div>
 
-            <button type="submit">Ejecutar Ataque</button>
+            <button type="submit">🚀 Ejecutar Ataque</button>
         </form>
 
         {% if message %}
@@ -106,6 +109,34 @@ Contraseña: {{ hydra_result.password }}
                 <pre>{{ ssh_result }}</pre>
             </div>
         {% endif %}
+
+        {% if sniff_results %}
+            <div class="output-box">
+                <h3>Resultados del Sniffing</h3>
+                {% if sniff_results|length == 0 %}
+                    <p>No se capturaron paquetes durante el sniffing.</p>
+                {% else %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Origen</th>
+                                <th>Destino</th>
+                                <th>Protocolo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pkt in sniff_results %}
+                                <tr>
+                                    <td>{{ pkt.src }}</td>
+                                    <td>{{ pkt.dst }}</td>
+                                    <td>{{ pkt.proto }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        {% endif %}
     </main>
 
     <footer>
@@ -119,17 +150,14 @@ Contraseña: {{ hydra_result.password }}
             hydra: document.getElementById('hydra-options'),
             syn_flood: document.getElementById('flood-options'),
             sniff: document.getElementById('sniff-options'),
-            ssh_scan: document.getElementById('ssh-options')
+            ssh_ip: document.getElementById('ssh-options')
         };
 
         function updateForm() {
-            // Ocultar todas las opciones condicionales
             for (const key in options) {
                 options[key].style.display = 'none';
             }
-
             let selected = tipoSelect.value;
-
             if (options[selected]) {
                 options[selected].style.display = 'block';
             }
