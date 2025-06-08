@@ -1294,28 +1294,5 @@ sudo systemctl restart grafana-server
 ```
 
 ---
-### INSTALAR WAZUH
 
-Error al instalar docker, así que he tenido que borrar la caché
-
-```bash
-sudo rm -rf /var/lib/apt/lists/*
-sudo mkdir -p /var/lib/apt/lists/
-```
-Instalar docker
-
-```bash
-sudo apt install docker.io -y
-sudo apt install docker-compose -y
-```
-
-Iniciar contenedores de Wazuh
-
-```bash
-git clone https://github.com/wazuh/wazuh-docker.git -b v4.12.0
-```
-
-```bash
-cd wazuh-docker/single-node
-sudo docker-compose up -d
-```
+He hecho un botón para descargar un CSV con las contraseñas de los resultados de Hydra, lo he hecho sólo accesible para el administrador, si un usuario sin permisos intenta descargarlo, le redirige a una página de error 403.
