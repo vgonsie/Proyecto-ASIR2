@@ -1346,3 +1346,4 @@ sudo setcap cap_net_raw,cap_net_admin=eip /usr/bin/dumpcap
 
 newgrp wireshark
 ```
+- Cambios visuales a la web.
