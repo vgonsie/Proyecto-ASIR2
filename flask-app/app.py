@@ -184,7 +184,18 @@ def start_syn_flood(ip, puerto, duracion):
     thread = threading.Thread(target=syn_flood_attack, args=(ip, puerto, duracion))
     thread.daemon = True
     thread.start()
+    guardar_resultado_syn(ip, puerto)
     send_alert("SYN Flood", ip)
+
+def guardar_resultado_syn(ip, puerto):
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("INSERT INTO ataques_realizados(ip, tipo_ataque, puerto) VALUES(?,?,?)",
+                  (ip, "syn_flood", puerto))
+        conn.commit(); conn.close()
+    except sqlite3.Error as e:
+        print(f"[SQLITE SYN] {e}")
 
 # ---- SNIFFING ----
 sniff_data = []
@@ -199,8 +210,26 @@ def packet_handler(pkt):
         })
 
 def start_sniffing(interface, duracion):
+    sniff_data.clear()
     sniff(iface=interface, prn=packet_handler, timeout=int(duracion), store=False)
+    guardar_resultado_sniffing()
     send_alert("Sniffing", interface)
+
+def guardar_resultado_sniffing():
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        for pkt in sniff_data:
+            c.execute("INSERT INTO sniffing_resultados(src_ip, dst_ip, protocolo) VALUES(?,?,?)",
+                      (pkt["src"], pkt["dst"], pkt["proto"]))
+        # También guardamos el ataque en ataques_realizados (sin puerto específico)
+        c.execute("INSERT INTO ataques_realizados(ip, tipo_ataque) VALUES(?,?)",
+                  ("interfaz_sniffing", "sniffing"))
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as e:
+        print(f"[SQLITE SNIFFING] {e}")
+
 
 # ---- SSH Escaneo Interfaz ----
 def escanear_interfaz_ssh(ip, ssh_user, ssh_pass):
@@ -211,10 +240,23 @@ def escanear_interfaz_ssh(ip, ssh_user, ssh_pass):
         stdin, stdout, stderr = ssh.exec_command("ip a")
         salida = stdout.read().decode()
         ssh.close()
+        guardar_ataque(ip, "interface_scan", None)
         send_alert("Escaneo de interfaz de red (SSH)", ip)
         return salida
     except Exception as e:
         return f"Error SSH: {e}"
+
+def guardar_ataque(ip, tipo_ataque, puerto=None):
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("INSERT INTO ataques_realizados(ip, tipo_ataque, puerto) VALUES(?,?,?)",
+                  (ip, tipo_ataque, puerto))
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as e:
+        print(f"[SQLITE ATAQUE] {e}")
+
 
 # ---- FLASK ROUTES ----
 @app.route('/login', methods=['GET', 'POST'])
@@ -299,8 +341,7 @@ def index():
 @app.route('/dashboards')
 @login_required
 def dashboards():
-    # Aquí puedes cambiar la plantilla o poner contenido que necesites
-    return render_template('grafana.html', username=current_user.username)
+        return render_template('grafana.html', username=current_user.username)
 
 # Botón descargar passwords
 from flask import send_file, abort
@@ -311,7 +352,7 @@ import csv
 @login_required
 def download_passwords():
     if current_user.role != 'admin':
-        abort(403)  # Prohibido para usuarios que no sean admin
+        abort(403)
 
     try:
         conn = sqlite3.connect(DB_PATH)

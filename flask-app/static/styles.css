@@ -1,4 +1,3 @@
-/* --- Global Reset --- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -13,7 +12,6 @@ body {
     padding: 20px;
 }
 
-/* --- Header --- */
 header {
     background-color: #121f2e;
     padding: 20px;
@@ -43,7 +41,6 @@ header h1 {
     text-decoration: underline;
 }
 
-/* --- Login --- */
 .login-body {
     background-color: #0e1621;
     display: flex;
@@ -108,7 +105,6 @@ header h1 {
     text-align: center;
 }
 
-/* --- Main Form --- */
 main {
     max-width: 900px;
     margin: 30px auto;
@@ -155,7 +151,6 @@ form.attack-form button:hover {
     display: none;
 }
 
-/* --- Output Section --- */
 .output-box {
     background-color: #111d2b;
     border: 1px solid #00bfff;
@@ -177,7 +172,6 @@ form.attack-form button:hover {
     overflow-x: auto;
 }
 
-/* --- Messages --- */
 .message {
     background-color: #1e6b9d;
     color: #fff;
@@ -187,7 +181,6 @@ form.attack-form button:hover {
     text-align: center;
 }
 
-/* --- Dashboards Link --- */
 footer {
     margin-top: 30px;
     text-align: center;
@@ -288,7 +281,7 @@ footer {
     display: inline-block;
     padding: 6px 14px;
     background-color: #00bfff;
-    color: #fff !important;  /* fuerza color blanco */
+    color: #fff !important;  
     border-radius: 4px;
     text-decoration: none;
     font-weight: bold;

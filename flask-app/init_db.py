@@ -42,6 +42,27 @@ CREATE TABLE IF NOT EXISTS ataques_realizados (
 )
 ''')
 
+# Tabla para resultados de sniffing
+c.execute('''
+CREATE TABLE IF NOT EXISTS sniffing_resultados (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    src_ip TEXT,
+    dst_ip TEXT,
+    protocolo TEXT,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+''')
+
+# Tabla para escaneo SSH
+c.execute('''
+CREATE TABLE IF NOT EXISTS ssh_resultados (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ip TEXT,
+    salida TEXT,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+''')
+
 conn.commit()
 conn.close()
 
