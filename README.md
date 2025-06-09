@@ -1301,10 +1301,6 @@ He hecho un botón para descargar un CSV con las contraseñas de los resultados 
 
 ---
 
-
-
----
-
 ## GRAFANA
 
 He añadido una tercera tabla con el historial de IPs atacadas en ![grafana](flask-app/templates/grafana.html)
