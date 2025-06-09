@@ -1323,21 +1323,18 @@ He creado 2 máquinas virtuales nuevas para un entorno de pruebas más realista.
 
 Corrección de errores en el backend Flask:
 
-    Se solucionó un error AttributeError: 'list' object has no attribute 'get' en la función run_nmap, ajustando el manejo del resultado de Nmap.
-
-    Se restauró una copia funcional de seguridad tras fallos en ejecución.
+Se solucionó un error AttributeError: 'list' object has no attribute 'get' en la función run_nmap, ajustando el manejo del resultado de Nmap.
+Se restauró una copia funcional de seguridad tras fallos en ejecución.
 
 Mejora del módulo de sniffing:
 
-    Solucionado el error Interface 'enp1s0' not found, configurando la interfaz de red adecuada según el sistema.
-
-    Añadida verificación de permisos para captura con scapy.
+Solucionado el error Interface 'enp1s0' not found, configurando la interfaz de red adecuada según el sistema.
+Añadida verificación de permisos para captura con scapy.
 
 Pruebas de ejecución con Wireshark:
 
-    Se creó un script para abrir Wireshark filtrando tráfico HTTP (tcp.port == 80).
-
-    Se resolvió el error Couldn't run dumpcap in child process: Permiso denegado otorgando permisos correctos a dumpcap.
+Se creó un script para abrir Wireshark filtrando tráfico HTTP (tcp.port == 80).
+Se resolvió el error Couldn't run dumpcap in child process: Permiso denegado otorgando permisos correctos a dumpcap.
 
 ```bash
 sudo usermod -aG wireshark $USER
