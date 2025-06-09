@@ -1315,4 +1315,8 @@ He añadido una tercera tabla con el historial de IPs atacadas en ![grafana](fla
 
 He añadido las alertas por correo a los demás ataques que faltaban.
 
+---
+
+## ENTORNO
+
 He creado 2 máquinas virtuales nuevas para un entorno de pruebas más realista.
