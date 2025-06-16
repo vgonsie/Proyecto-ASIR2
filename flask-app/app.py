@@ -100,22 +100,23 @@ def run_nmap(ip):
         return {"error": e.output.decode(), "raw_output": e.output.decode()}
 
 def parse_nmap_output(output):
-    data = {"host": "", "status": "", "ports": [], "mac": "", "raw_output": output}
+    data = {"host": "", "estado": "", "puertos": [], "mac": "", "raw_output": output}
     for line in output.splitlines():
         if "Nmap scan report for" in line:
             data["host"] = line.split("for")[1].strip()
         elif "Host is up" in line:
-            data["status"] = line.strip()
+            data["estado"] = "Activo"
         elif "MAC Address:" in line:
             data["mac"] = line.split("MAC Address:")[1].strip()
         elif "/tcp" in line and "open" in line:
             p = line.split()
-            data["ports"].append({
-                "port": p[0],
-                "state": p[1],
-                "service": p[2],
-                "version": " ".join(p[3:]) if len(p) > 3 else ""
-            })
+            data["puertos"].append({
+	        "puerto": p[0],
+    		"estado": p[1],
+    	    	"servicio": p[2],
+ 	    	"version": " ".join(p[3:]) if len(p) > 3 else ""
+	    })
+
     return data
 
 def guardar_resultado_nmap(result, ip):

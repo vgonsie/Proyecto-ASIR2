@@ -289,3 +289,51 @@ footer {
     transition: background 0.3s ease;
     margin-left: 10px;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+table, th, td {
+    border: 1px solid #00bfff;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #0e1621;
+    color: #00bfff;
+}
+
+.raw-output {
+    background-color: #0e1621;
+    padding: 10px;
+    color: #00ffcc;
+    border: 1px solid #00bfff;
+    border-radius: 4px;
+    margin-top: 15px;
+    white-space: pre-wrap;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.toggle-btn {
+    margin-top: 15px;
+    background-color: #0077cc;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggle-btn:hover {
+    background-color: #005fa3;
+}

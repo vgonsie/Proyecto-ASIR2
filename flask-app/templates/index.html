@@ -24,7 +24,6 @@
                 <option value="nmap">Escaneo Nmap</option>
                 <option value="hydra">Fuerza Bruta (Hydra)</option>
                 <option value="syn_flood">SYN Flood</option>
-                <option value="sniff">Sniffing de Red</option>
                 <option value="ssh_ip">Escaneo interfaz de red (SSH)</option>
             </select>
 
@@ -74,41 +73,84 @@
 
         {% if result %}
             <div class="output-box">
-                <h3>Resultados de Nmap</h3>
-                <pre>
-Host: {{ result.host }}
-Estado: {{ result.status }}
-MAC: {{ result.mac }}
+    <h3>Resultados de Nmap</h3>
+    <table>
+        <tr><th>Host</th><td>{{ result.host }}</td></tr>
+        <tr><th>Estado</th><td>{{ result.estado }}</td></tr>
+        <tr><th>MAC</th><td>{{ result.mac }}</td></tr>
+    </table>
 
-{% for p in result.ports %}
-- {{ p.port }} | {{ p.service }} | {{ p.version }}
-{% endfor %}
-                </pre>
-            </div>
+    <h4>Puertos Abiertos</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Puerto</th>
+                <th>Servicio</th>
+                <th>Versión</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in result.puertos %}
+                <tr>
+                    <td>{{ p.puerto }}</td>
+                    <td>{{ p.servicio }}</td>
+                    <td>{{ p.version }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
+
         {% endif %}
 
         {% if hydra_result %}
             <div class="output-box">
-                <h3>Resultados de Hydra</h3>
-                {% if hydra_result.error %}
-                    <pre>{{ hydra_result.error }}</pre>
-                {% else %}
-                    <pre>
-Host: {{ hydra_result.host }}
-Puerto: {{ hydra_result.port }}
-Usuario: {{ hydra_result.login }}
-Contraseña: {{ hydra_result.password }}
-                    </pre>
-                {% endif %}
-            </div>
+    <h3>Resultados de Hydra</h3>
+    {% if hydra_result.error %}
+        <p style="color: red;">{{ hydra_result.error }}</p>
+    {% else %}
+        <table>
+            <tr><th>Host</th><td>{{ hydra_result.host }}</td></tr>
+            <tr><th>Puerto</th><td>{{ hydra_result.port }}</td></tr>
+            <tr><th>Usuario</th><td>{{ hydra_result.login }}</td></tr>
+            <tr><th>Contraseña</th><td>{{ hydra_result.password }}</td></tr>
+        </table>
+
+        <pre id="hydra-raw" class="raw-output" style="display:none;">{{ hydra_result.raw }}</pre>
+    {% endif %}
+</div>
+
         {% endif %}
 
         {% if ssh_result %}
-            <div class="output-box">
-                <h3>Resultado del Escaneo de Interfaz</h3>
-                <pre>{{ ssh_result }}</pre>
-            </div>
+    <div class="output-box">
+        <h3>Resultado del Escaneo de Interfaz</h3>
+        {% if ssh_result is iterable and ssh_result[0] is mapping %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Interfaz</th>
+                        <th>IP</th>
+                        <th>Máscara</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in ssh_result %}
+                        <tr>
+                            <td>{{ item.nombre }}</td>
+                            <td>{{ item.ip }}</td>
+                            <td>{{ item.mask }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <pre>{{ ssh_result }}</pre>
         {% endif %}
+    </div>
+{% endif %}
+
 
         {% if sniff_results %}
             <div class="output-box">
@@ -166,5 +208,6 @@ Contraseña: {{ hydra_result.password }}
         updateForm();
         tipoSelect.addEventListener('change', updateForm);
     </script>
+
 </body>
 </html>
